@@ -1,0 +1,31 @@
+.root {
+    width: 35vmin;
+    position: absolute;
+}
+
+.border {
+    border-radius: 7px;
+    border: 2px solid brown;
+    display: flex;
+    flex-flow: row wrap;
+    padding: 3px;
+    line-height: 1.2;
+}
+
+.cell {
+    border: 1px solid #000;
+    width: 100%;
+    padding: 0 2px 0 0;
+    font-weight: 700;
+    text-align: center;
+}
+
+.cell:first-child {
+    border-bottom: none;
+    margin-top: 1px;
+}
+
+.ScoreItem {
+    margin: 0 0 0px 0;
+    width: calc(100% - 5px);
+}
