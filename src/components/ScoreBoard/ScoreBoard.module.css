@@ -1,6 +1,7 @@
 .root {
     width: 35vmin;
-    position: absolute;
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 .border {
