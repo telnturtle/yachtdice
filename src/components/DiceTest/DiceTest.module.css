@@ -12,6 +12,18 @@
     perspective: 800px; */
 }
 
+.dice_wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(1.5 * 11vmin);
+    width: calc(1.5 * 11vmin);
+    transition: transform .25s ease-in-out;
+}
+.dice_wrap.float {
+    transform: scale(1.225);
+}
+
 .dice {
     display: grid;
     grid-template-columns: 1fr;
@@ -19,8 +31,7 @@
     width: 11vmin;
     list-style-type: none;
     transform-style: preserve-3d;
-    perspective: 800px;
-    transition: transform .3s ease-in-out;
+    transition: transform .125s ease-in-out;
     margin-inline-start: 0;
     padding-inline-start: 0;
     margin-block-start: 0;

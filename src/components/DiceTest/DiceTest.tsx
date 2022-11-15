@@ -12,24 +12,29 @@ function DiceTest(): ReactElement {
     [0, 0, 1, 0],
     [0, 0, 0, 1],
   ]);
+  const [float, setFloat] = useState<boolean>(false);
   const onClick = () => {
-    const numberRolls = getRandomIntInclusive(7, 13);
+    const numberRolls = getRandomIntInclusive(11, 17);
     const rolls = Array(numberRolls).fill(0).map(rotatorRandomXyz);
+    setFloat(true);
     for (let i = 0; i < rolls.length; i++) {
       setTimeout(() => {
         setMatrix((acc) => multiplyMatrix(acc, rolls[i]));
-      }, 400 * i);
+      }, 125 * i + 250);
     }
+    setTimeout(() => {
+      setFloat(false);
+    }, 125 * rolls.length + 250);
   };
 
   const topsideNumber = matrixToTopside(matrix);
 
   return (
     <div>
-      <D6 matrix3d={makeMatrix3dTextFromMatrix(matrix)} />
+      <D6 matrix3d={makeMatrix3dTextFromMatrix(matrix)} float={float} />
       <button onClick={onClick}>Roll!</button>
       <div>{String(topsideNumber)}</div>
-      <div>{JSON.stringify(matrix)}</div>
+      {/* <div>{JSON.stringify(matrix)}</div> */}
     </div>
   );
 }
@@ -38,43 +43,45 @@ export default DiceTest;
 
 // ⚀ ⚁ ⚂ ⚃ ⚄ ⚅
 
-function D6({ matrix3d: matrix3d = '' }: { matrix3d?: string }): ReactElement {
+function D6({ matrix3d = '', float }: { matrix3d?: string; float: boolean }): ReactElement {
   return (
-    <ol className={styles.dice} style={{ transform: matrix3d }}>
-      <li className={styles.die} data-die="1">
-        <span className={styles.dot} />
-      </li>
-      <li className={styles.die} data-die="2">
-        <span className={styles.dot} />
-        <span className={styles.dot} />
-      </li>
-      <li className={styles.die} data-die="3">
-        <span className={styles.dot} />
-        <span className={styles.dot} />
-        <span className={styles.dot} />
-      </li>
-      <li className={styles.die} data-die="4">
-        <span className={styles.dot} />
-        <span className={styles.dot} />
-        <span className={styles.dot} />
-        <span className={styles.dot} />
-      </li>
-      <li className={styles.die} data-die="5">
-        <span className={styles.dot} />
-        <span className={styles.dot} />
-        <span className={styles.dot} />
-        <span className={styles.dot} />
-        <span className={styles.dot} />
-      </li>
-      <li className={styles.die} data-die="6">
-        <span className={styles.dot} />
-        <span className={styles.dot} />
-        <span className={styles.dot} />
-        <span className={styles.dot} />
-        <span className={styles.dot} />
-        <span className={styles.dot} />
-      </li>
-    </ol>
+    <div className={`${styles.dice_wrap} ${float ? styles.float : ''}`}>
+      <ol className={styles.dice} style={{ transform: matrix3d }}>
+        <li className={styles.die} data-die="1">
+          <span className={styles.dot} />
+        </li>
+        <li className={styles.die} data-die="2">
+          <span className={styles.dot} />
+          <span className={styles.dot} />
+        </li>
+        <li className={styles.die} data-die="3">
+          <span className={styles.dot} />
+          <span className={styles.dot} />
+          <span className={styles.dot} />
+        </li>
+        <li className={styles.die} data-die="4">
+          <span className={styles.dot} />
+          <span className={styles.dot} />
+          <span className={styles.dot} />
+          <span className={styles.dot} />
+        </li>
+        <li className={styles.die} data-die="5">
+          <span className={styles.dot} />
+          <span className={styles.dot} />
+          <span className={styles.dot} />
+          <span className={styles.dot} />
+          <span className={styles.dot} />
+        </li>
+        <li className={styles.die} data-die="6">
+          <span className={styles.dot} />
+          <span className={styles.dot} />
+          <span className={styles.dot} />
+          <span className={styles.dot} />
+          <span className={styles.dot} />
+          <span className={styles.dot} />
+        </li>
+      </ol>
+    </div>
   );
 }
 
