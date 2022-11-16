@@ -14,17 +14,17 @@ function DiceTest(): ReactElement {
   ]);
   const [float, setFloat] = useState<boolean>(false);
   const onClick = () => {
-    const numberRolls = getRandomIntInclusive(11, 17);
+    const numberRolls = getRandomIntInclusive(17, 31);
     const rolls = Array(numberRolls).fill(0).map(rotatorRandomXyz);
     setFloat(true);
     for (let i = 0; i < rolls.length; i++) {
       setTimeout(() => {
         setMatrix((acc) => multiplyMatrix(acc, rolls[i]));
-      }, 125 * i + 250);
+      }, 100 * i + 250);
     }
     setTimeout(() => {
       setFloat(false);
-    }, 125 * rolls.length + 250);
+    }, 100 * rolls.length + 250);
   };
 
   const topsideNumber = matrixToTopside(matrix);
