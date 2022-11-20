@@ -4,4 +4,5 @@
     height: 100%;
     position: absolute;
     display: flex;
+    overflow: hidden;
 }
