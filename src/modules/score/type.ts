@@ -1,0 +1,15 @@
+export type TCategories =
+  | 'aces'
+  | 'deuces'
+  | 'threes'
+  | 'fours'
+  | 'fives'
+  | 'sixes'
+  | 'bonus'
+  | 'choice'
+  | 'fourOfAKind'
+  | 'fullHouse'
+  | 'smallStraight'
+  | 'largeStraight'
+  | 'yacht'
+  | 'total';

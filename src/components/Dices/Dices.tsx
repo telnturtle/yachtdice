@@ -119,7 +119,7 @@ function Dices(): ReactElement {
         ))}
       </div>
       <button className={buttonClassName} onClick={onRoll} disabled={touchDisabled}>
-        Roll dices! {leftRolls}/3
+        Roll the dices! {leftRolls}/3
       </button>
     </div>
   );
