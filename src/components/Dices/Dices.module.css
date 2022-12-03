@@ -36,6 +36,14 @@
     animation: 1.5s ease-in-out bouncing infinite;
 }
 
+.rollLeft {
+    position: absolute;
+    top: 25vmin;
+    right: 3vmin;
+    font-weight: 700;
+    color: #222;
+}
+
 @keyframes bouncing {
     from {
         transform: scale(1);

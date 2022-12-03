@@ -7,6 +7,7 @@ import {
   multiplyMatrix,
   rotatorRandomXyz,
 } from '../../modules/dice/util';
+import { useScoreStore } from '../../modules/score/store';
 import Dice from '../Dice/';
 import styles from './Dices.module.css';
 
@@ -38,8 +39,13 @@ const INITIAL_DICE_INFO_LIST: DiceInfo[] = Array(6)
 
 function Dices(): ReactElement {
   const [diceInfos, setDiceInfos] = useState<DiceInfo[]>(INITIAL_DICE_INFO_LIST);
-  const [touchDisabled, setTouchDisabled] = useState<boolean>(false);
+  // const [touchDisabled, setTouchDisabled] = useState<boolean>(false);
   const [leftRolls, setLeftRolls] = useState<number>(3);
+  const [setDices, touchDisabled, setTouchDisabled] = useScoreStore((s) => [
+    s.setDices,
+    s.diceTouchDisabled,
+    s.setDiceTouchDisabled,
+  ]);
 
   /** Roll the dice with the id `id` */
   const roll = (id: number) => {
@@ -77,6 +83,7 @@ function Dices(): ReactElement {
         unkepts.forEach((di) => {
           next[di.id - 1].order = oneToFive.pop() || 1;
         });
+        setDices(next.map((di) => di.topside));
         return next;
       });
       setTouchDisabled(false);
@@ -119,8 +126,9 @@ function Dices(): ReactElement {
         ))}
       </div>
       <button className={buttonClassName} onClick={onRoll} disabled={touchDisabled}>
-        Roll dices! {leftRolls}/3
+        Roll the dices!
       </button>
+      <span className={styles.rollLeft}>{leftRolls}/3</span>
     </div>
   );
 }
@@ -128,3 +136,7 @@ function Dices(): ReactElement {
 export default Dices;
 
 // Animated 3D Dice Roll - CodeSandbox https://codesandbox.io/s/animated-3d-dice-roll-eorl0?from-embed
+
+// function NowPlayerRound(): ReactElement {
+//   useScoreStore(s => s.)
+// }
