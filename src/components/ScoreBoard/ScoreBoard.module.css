@@ -19,14 +19,35 @@
     padding: 0 2px 0 0;
     font-weight: 700;
     text-align: center;
+    box-sizing: border-box;
 }
 
 .cell:first-child {
     border-bottom: none;
     margin-top: 1px;
 }
+.cell.noleftborder {
+    border-left: none;
+}
 
 .ScoreItem {
     margin: 0 0 0px 0;
     width: calc(100% - 5px);
+    display: flex;
+    flex-flow: row wrap;
+}
+.ScoreItem.writable {
+    animation: 1.5s ease-in-out emphasize-writable infinite;
+}
+
+@keyframes emphasize-writable {
+    from {
+        background-color: rgba(0, 102, 231, 10%);
+    }
+    50% {
+        background-color: rgba(212, 7, 15, 10%);
+    }
+    to {
+        background-color: rgba(0, 102, 231, 10%);
+    }
 }

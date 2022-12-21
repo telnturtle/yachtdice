@@ -1,5 +1,61 @@
 .root {
     height: 100%;
-    padding: 0 0 0 10vmin;
+    padding: 0 0 0 5vmin;
     display: flex;
+}
+
+.DiceRow {
+    display: flex;
+    flex-flow: column;
+}
+
+.roll {
+    position: absolute;
+    top: 0;
+    right: 0;
+    /* https://gradientbuttons.colorion.co */
+    background-image: linear-gradient(to right, #F09819 0%, #F09819  31%, #FF512F  100%);
+    transition: 0.5s;
+    box-shadow: 0 0 20px #eee;
+    text-align: center;
+    text-transform: uppercase;
+    display: block;
+    color: #eee;
+    font-weight: 900;
+    width: 20vmin;
+    height: 20vmin;
+    opacity: .9;
+    border: none;
+}
+
+.roll:disabled {
+    opacity: 20%;
+}
+
+.roll.bouncing {
+    animation: 1.5s ease-in-out bouncing infinite;
+}
+
+.rollLeft {
+    position: absolute;
+    top: 25vmin;
+    right: 3vmin;
+    font-weight: 700;
+    color: #222;
+}
+
+@keyframes bouncing {
+    from {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.125)
+    }
+    to {
+        transform: scale(1);
+    }
+}
+         
+.leftZeroRolls.leftZeroRolls {
+    opacity: .6;
 }
