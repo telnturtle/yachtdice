@@ -42,6 +42,10 @@
     right: 3vmin;
     font-weight: 700;
     color: #222;
+    font-size: 140%;
+}
+.rollLeft .head {
+    opacity: .8;
 }
 
 @keyframes bouncing {

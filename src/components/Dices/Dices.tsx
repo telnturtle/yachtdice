@@ -1,6 +1,7 @@
 import { ReactElement, useState } from 'react';
 import { TMatrix } from '../../modules/dice/type';
 import {
+  displayLeftRollsEmoji,
   getRandomIntInclusive,
   identityMatrixFourByFour,
   matrixToTopside,
@@ -128,7 +129,10 @@ function Dices(): ReactElement {
       <button className={buttonClassName} onClick={onRoll} disabled={touchDisabled}>
         Roll the dices!
       </button>
-      <span className={styles.rollLeft}>{leftRolls}/3</span>
+      <span className={styles.rollLeft}>
+        <span className={styles.head}>{displayLeftRollsEmoji(leftRolls).head}</span>
+        {displayLeftRollsEmoji(leftRolls).tail}
+      </span>
     </div>
   );
 }

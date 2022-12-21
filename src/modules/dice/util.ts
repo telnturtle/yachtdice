@@ -293,3 +293,16 @@ export function matrixToString(matrix: TMatrix) {
 
 // https://gist.github.com/f5io/7466669
 // Get 3D CSS rotation value from matrix3d() with JavaScript https://stackoverflow.com/questions/34450835/get-3d-css-rotation-value-from-matrix3d-with-javascript
+
+export function displayLeftRollsEmoji(leftRolls: number) {
+  switch (leftRolls) {
+    case 3:
+      return {head: '', tail: '3️⃣2️⃣1️⃣'};
+    case 2:
+      return {head: '✅', tail: '2️⃣1️⃣'};
+    case 1:
+      return {head: '✅✅', tail: '1️⃣'};
+    default:
+      return {head: '✅✅✅', tail: ''};
+  }
+}
