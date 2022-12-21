@@ -11,7 +11,7 @@
 
 .roll {
     position: absolute;
-    top: 0;
+    bottom: 0;
     right: 0;
     /* https://gradientbuttons.colorion.co */
     background-image: linear-gradient(to right, #F09819 0%, #F09819  31%, #FF512F  100%);
@@ -20,10 +20,11 @@
     text-align: center;
     text-transform: uppercase;
     display: block;
-    color: #eee;
+    color: #f0f0f0;
     font-weight: 900;
+    font-size: larger;
     width: 20vmin;
-    height: 20vmin;
+    height: 30vmin;
     opacity: .9;
     border: none;
 }
@@ -38,8 +39,8 @@
 
 .rollLeft {
     position: absolute;
-    top: 25vmin;
-    right: 3vmin;
+    bottom: 36vmin;
+    right: 4vmin;
     font-weight: 700;
     color: #222;
     font-size: 140%;
@@ -53,7 +54,7 @@
         transform: scale(1);
     }
     50% {
-        transform: scale(1.125)
+        transform: scale(108%)
     }
     to {
         transform: scale(1);
