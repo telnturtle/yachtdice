@@ -1,1 +1,1 @@
-export type TMatrix = number[][];
+export type TMatrix = number[][]

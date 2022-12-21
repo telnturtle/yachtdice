@@ -1,2 +1,2 @@
-export * from './Dice';
-export { default } from './Dice';
+export * from './Dice'
+export { default } from './Dice'

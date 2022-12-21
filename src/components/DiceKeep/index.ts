@@ -1,1 +1,1 @@
-export * from './DiceKeep';
+export * from './DiceKeep'

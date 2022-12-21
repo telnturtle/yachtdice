@@ -30,6 +30,6 @@ const CATEGORIES = {
   largeStraight: 'largeStraight',
   yacht: 'yacht',
   total: 'total',
-} as const;
+} as const
 
-export type TCategories = typeof CATEGORIES[keyof typeof CATEGORIES];
+export type TCategories = typeof CATEGORIES[keyof typeof CATEGORIES]

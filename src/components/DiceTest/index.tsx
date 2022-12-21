@@ -1,1 +1,1 @@
-export * from './DiceTest';
+export * from './DiceTest'

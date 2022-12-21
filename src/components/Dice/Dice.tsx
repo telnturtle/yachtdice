@@ -1,15 +1,15 @@
-import { ReactElement, useCallback, useEffect, useState } from 'react';
-import { TMatrix } from '../../modules/dice/type';
-import { identityMatrixFourByFour, makeMatrix3dTextFromMatrix, multiplyMatrix } from '../../modules/dice/util';
-import styles from './Dice.module.css';
+import { ReactElement, useCallback, useEffect, useState } from 'react'
+import { TMatrix } from '../../modules/dice/type'
+import { identityMatrixFourByFour, makeMatrix3dTextFromMatrix, multiplyMatrix } from '../../modules/dice/util'
+import styles from './Dice.module.css'
 
 interface DiceProps {
-  id: number;
-  transformationMatrixSequence: TMatrix[];
-  order?: number;
-  kept?: boolean;
-  onClick?: (id: DiceProps['id']) => void;
-  keptOrder: number;
+  id: number
+  transformationMatrixSequence: TMatrix[]
+  order?: number
+  kept?: boolean
+  onClick?: (id: DiceProps['id']) => void
+  keptOrder: number
 }
 
 /**
@@ -18,39 +18,39 @@ interface DiceProps {
  *
  */
 function Dice({ id, transformationMatrixSequence: tms, order, kept, onClick, keptOrder }: DiceProps): ReactElement {
-  const TICK = 100;
-  const FLOATING = 250;
-  const [matrix, setMatrix] = useState<TMatrix>(identityMatrixFourByFour);
-  const [float, setFloat] = useState<boolean>(false);
+  const TICK = 100
+  const FLOATING = 250
+  const [matrix, setMatrix] = useState<TMatrix>(identityMatrixFourByFour)
+  const [float, setFloat] = useState<boolean>(false)
 
   const roll = useCallback((rolls: DiceProps['transformationMatrixSequence']) => {
-    setFloat(true);
+    setFloat(true)
     for (let i = 0; i < rolls.length; i++) {
       setTimeout(() => {
-        setMatrix((acc) => multiplyMatrix(acc, rolls[i]));
-      }, TICK * i + FLOATING);
+        setMatrix((acc) => multiplyMatrix(acc, rolls[i]))
+      }, TICK * i + FLOATING)
     }
     setTimeout(() => {
-      setFloat(false);
-    }, TICK * rolls.length + FLOATING);
-  }, []);
+      setFloat(false)
+    }, TICK * rolls.length + FLOATING)
+  }, [])
 
   useEffect(() => {
-    roll(tms);
-  }, [tms, roll]);
-  return <D6 matrix3d={makeMatrix3dTextFromMatrix(matrix)} {...{ float, order, kept, onClick, id, keptOrder }} />;
+    roll(tms)
+  }, [tms, roll])
+  return <D6 matrix3d={makeMatrix3dTextFromMatrix(matrix)} {...{ float, order, kept, onClick, id, keptOrder }} />
 }
 
-export default Dice;
+export default Dice
 
 interface D6Props {
-  matrix3d?: string;
-  float: boolean;
-  order?: number;
-  kept?: boolean;
-  onClick: DiceProps['onClick'];
-  id: DiceProps['id'];
-  keptOrder: DiceProps['keptOrder'];
+  matrix3d?: string
+  float: boolean
+  order?: number
+  kept?: boolean
+  onClick: DiceProps['onClick']
+  id: DiceProps['id']
+  keptOrder: DiceProps['keptOrder']
 }
 
 function D6({ matrix3d = '', float, order = 0, kept, onClick = () => {}, id, keptOrder }: D6Props): ReactElement {
@@ -59,7 +59,7 @@ function D6({ matrix3d = '', float, order = 0, kept, onClick = () => {}, id, kep
     float ? styles.float : '',
     order ? styles[`order_${order}`] : '',
     kept ? styles[`kept_${keptOrder}`] : '',
-  ].join(' ');
+  ].join(' ')
   return (
     <div className={className} onClick={() => onClick(id)}>
       <ol className={styles.dice} style={{ transform: matrix3d }}>
@@ -98,5 +98,5 @@ function D6({ matrix3d = '', float, order = 0, kept, onClick = () => {}, id, kep
         </li>
       </ol>
     </div>
-  );
+  )
 }

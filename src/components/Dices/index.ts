@@ -1,1 +1,1 @@
-export * from './Dices';
+export * from './Dices'
