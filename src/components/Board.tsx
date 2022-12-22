@@ -13,7 +13,6 @@ export function Board() {
         margin: auto 0 auto 0;
         width: 100vmin;
         height: 100%;
-        position: absolute;
         display: flex;
         overflow: hidden;
       `}
