@@ -102,7 +102,7 @@ export function Dices(): ReactElement {
       const orders = new Set(next.filter((__) => !__.kept).map((__) => __.order))
       const dice = { ...next[id - 1], kept: !next[id - 1].kept }
       if (dice.kept) {
-        dice.keptOrder = Math.max(...[1, 2, 3, 4, 5].filter((__) => !keptOrders.has(__)))
+        dice.keptOrder = Math.min(...[1, 2, 3, 4, 5].filter((__) => !keptOrders.has(__)))
       } else {
         dice.order = Math.min(...[1, 2, 3, 4, 5].filter((__) => !orders.has(__)))
       }

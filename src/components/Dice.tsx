@@ -19,7 +19,14 @@ interface DiceProps {
  *
  *
  */
-export function Dice({ id, transformationMatrixSequence: tms, order, kept, onClick, keptOrder }: DiceProps): ReactElement {
+export function Dice({
+  id,
+  transformationMatrixSequence: tms,
+  order,
+  kept,
+  onClick,
+  keptOrder,
+}: DiceProps): ReactElement {
   const TICK = 100
   const FLOATING = 250
   const [matrix, setMatrix] = useState<TMatrix>(identityMatrixFourByFour)
@@ -43,54 +50,52 @@ export function Dice({ id, transformationMatrixSequence: tms, order, kept, onCli
   return <D6 matrix3d={makeMatrix3dTextFromMatrix(matrix)} {...{ float, order, kept, onClick, id, keptOrder }} />
 }
 
-
 const diceWrapCss = css`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: calc(1.5 * 11vmin);
-  width: calc(1.5 * 11vmin);
-  transition: transform 0.25s ease-in-out, bottom 0.25s ease-in-out, left 0.25s ease-in-out,
-    margin-top 0.25s ease-in-out;
+  height: calc(1.5 * min(16vw, 9vh));
+  width: calc(1.5 * min(16vw, 9vh));
+  transition: transform 0.25s ease-in-out, top 0.25s ease-in-out, right 0.25s ease-in-out, margin-top 0.25s ease-in-out;
   position: absolute;
-  left: calc(35vmin + 10vmin + 10vmax + 5vmin);
+  right: 0;
   &.float {
     transform: scale(1.225);
   }
   &.order_1 {
-    bottom: calc(4 * 1.5 * 11vmin + 4vmin);
+    top: calc(1 * 1.25 * min(16vw, 9vh));
   }
   &.order_2 {
-    bottom: calc(3 * 1.5 * 11vmin + 4vmin);
+    top: calc(2 * 1.25 * min(16vw, 9vh));
   }
   &.order_3 {
-    bottom: calc(2 * 1.5 * 11vmin + 4vmin);
+    top: calc(3 * 1.25 * min(16vw, 9vh));
   }
   &.order_4 {
-    bottom: calc(1 * 1.5 * 11vmin + 4vmin);
+    top: calc(4 * 1.25 * min(16vw, 9vh));
   }
   &.order_5 {
-    bottom: calc(0 * 1.5 * 11vmin + 4vmin);
+    top: calc(5 * 1.25 * min(16vw, 9vh));
   }
   &.kept_1 {
-    left: 45vmin;
-    bottom: calc((100vh - 5 * 1.5 * 11vmin) / 2 + 4 * 1.5 * 11vmin);
+    right: calc(1.5 * min(16vw, 9vh));
+    top: calc(1 * 1.25 * min(16vw, 9vh));
   }
   &.kept_2 {
-    left: 45vmin;
-    bottom: calc((100vh - 5 * 1.5 * 11vmin) / 2 + 3 * 1.5 * 11vmin);
+    right: calc(1.5 * min(16vw, 9vh));
+    top: calc(2 * 1.25 * min(16vw, 9vh));
   }
   &.kept_3 {
-    left: 45vmin;
-    bottom: calc((100vh - 5 * 1.5 * 11vmin) / 2 + 2 * 1.5 * 11vmin);
+    right: calc(1.5 * min(16vw, 9vh));
+    top: calc(3 * 1.25 * min(16vw, 9vh));
   }
   &.kept_4 {
-    left: 45vmin;
-    bottom: calc((100vh - 5 * 1.5 * 11vmin) / 2 + 1 * 1.5 * 11vmin);
+    right: calc(1.5 * min(16vw, 9vh));
+    top: calc(4 * 1.25 * min(16vw, 9vh));
   }
   &.kept_5 {
-    left: 45vmin;
-    bottom: calc((100vh - 5 * 1.5 * 11vmin) / 2 + 0 * 1.5 * 11vmin);
+    right: calc(1.5 * min(16vw, 9vh));
+    top: calc(5 * 1.25 * min(16vw, 9vh));
   }
 `
 
