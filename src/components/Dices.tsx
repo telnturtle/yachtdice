@@ -1,5 +1,8 @@
+/** @jsxImportSource @emotion/react */
+import { cx } from '@emotion/css'
+import { css } from '@emotion/react'
 import { ReactElement, useState } from 'react'
-import { TMatrix } from '../../modules/dice/type'
+import { TMatrix } from '../modules/dice/type'
 import {
   displayLeftRollsEmoji,
   getRandomIntInclusive,
@@ -7,10 +10,9 @@ import {
   matrixToTopside,
   multiplyMatrix,
   rotatorRandomXyz,
-} from '../../modules/dice/util'
-import { useScoreStore } from '../../modules/score/store'
-import Dice from '../Dice/'
-import styles from './Dices.module.css'
+} from '../modules/dice/util'
+import { useScoreStore } from '../modules/score/store'
+import { Dice } from './Dice'
 
 interface DiceInfo {
   id: number
@@ -38,7 +40,7 @@ const INITIAL_DICE_INFO_LIST: DiceInfo[] = Array(6)
   )
   .slice(1)
 
-function Dices(): ReactElement {
+export function Dices(): ReactElement {
   const [diceInfos, setDiceInfos] = useState<DiceInfo[]>(INITIAL_DICE_INFO_LIST)
   // const [touchDisabled, setTouchDisabled] = useState<boolean>(false);
   const [leftRolls, setLeftRolls] = useState<number>(3)
@@ -108,16 +110,13 @@ function Dices(): ReactElement {
       return next
     })
   }
-
-  const buttonClassName = [
-    styles.roll,
-    !leftRolls || diceInfos.every((__) => __.kept) ? styles.leftZeroRolls : '',
-    leftRolls === 3 ? styles.bouncing : '',
-  ].join(' ')
-
+  const buttonClassName = cx({
+    leftZeroRolls: !leftRolls || diceInfos.every((__) => __.kept),
+    bouncing: leftRolls === 3,
+  })
   return (
-    <div className={styles.root}>
-      <div className={styles.DiceRow}>
+    <div css={CSS.root}>
+      <div css={CSS.diceRow}>
         {diceInfos.map(({ id, order, matricesPerTerm, kept, keptOrder }) => (
           <Dice
             key={id}
@@ -126,21 +125,77 @@ function Dices(): ReactElement {
           />
         ))}
       </div>
-      <button className={buttonClassName} onClick={onRoll} disabled={touchDisabled}>
+      <button css={CSS.roll} className={buttonClassName} onClick={onRoll} disabled={touchDisabled}>
         Roll the dices!
       </button>
-      <span className={styles.rollLeft}>
-        <span className={styles.head}>{displayLeftRollsEmoji(leftRolls).head}</span>
+      <span css={CSS.rollLeft}>
+        <span className="head">{displayLeftRollsEmoji(leftRolls).head}</span>
         {displayLeftRollsEmoji(leftRolls).tail}
       </span>
     </div>
   )
 }
 
-export default Dices
-
 // Animated 3D Dice Roll - CodeSandbox https://codesandbox.io/s/animated-3d-dice-roll-eorl0?from-embed
 
-// function NowPlayerRound(): ReactElement {
-//   useScoreStore(s => s.)
-// }
+const CSS = {
+  root: css`
+    height: 100%;
+    padding: 0 0 0 5vmin;
+    display: flex;
+  `,
+  diceRow: css`
+    display: flex;
+    flex-flow: column;
+  `,
+  roll: css`
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    /* https://gradientbuttons.colorion.co */
+    background-image: linear-gradient(to right, #f09819 0%, #f09819 31%, #ff512f 100%);
+    transition: 0.5s;
+    box-shadow: 0 0 20px #eee;
+    text-align: center;
+    text-transform: uppercase;
+    display: block;
+    color: #f0f0f0;
+    font-weight: 900;
+    font-size: larger;
+    width: 20vmin;
+    height: 30vmin;
+    opacity: 0.9;
+    border: none;
+    &:disabled {
+      opacity: 20%;
+    }
+    &.bouncing {
+      animation: 1.5s ease-in-out bouncing infinite;
+    }
+    @keyframes bouncing {
+      from {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(108%);
+      }
+      to {
+        transform: scale(1);
+      }
+    }
+    &.leftzerorolls {
+      opacity: 0.6;
+    }
+  `,
+  rollLeft: css`
+    position: absolute;
+    bottom: 36vmin;
+    right: 4vmin;
+    font-weight: 700;
+    color: #222;
+    font-size: 140%;
+    &.head {
+      opacity: 0.8;
+    }
+  `,
+}
