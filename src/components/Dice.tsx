@@ -12,6 +12,7 @@ interface DiceProps {
   kept?: boolean
   onClick?: (id: DiceProps['id']) => void
   keptOrder: number
+  representativeMatrix?: TMatrix
 }
 
 /**
@@ -26,6 +27,7 @@ export function Dice({
   kept,
   onClick,
   keptOrder,
+  representativeMatrix,
 }: DiceProps): ReactElement {
   const TICK = 100
   const FLOATING = 250
@@ -47,6 +49,9 @@ export function Dice({
   useEffect(() => {
     roll(tms)
   }, [tms, roll])
+  useEffect(() => {
+    if (representativeMatrix) setMatrix(representativeMatrix)
+  }, [representativeMatrix])
   return <D6 matrix3d={makeMatrix3dTextFromMatrix(matrix)} {...{ float, order, kept, onClick, id, keptOrder }} />
 }
 

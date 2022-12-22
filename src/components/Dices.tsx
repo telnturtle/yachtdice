@@ -1,11 +1,12 @@
 /** @jsxImportSource @emotion/react */
 import { cx } from '@emotion/css'
 import { css } from '@emotion/react'
-import { ReactElement, useState } from 'react'
+import { ReactElement, useEffect, useReducer, useState } from 'react'
 import { TMatrix } from '../modules/dice/type'
 import {
   displayLeftRollsEmoji,
   getRandomIntInclusive,
+  getRepresentativeMatrix,
   identityMatrixFourByFour,
   matrixToTopside,
   multiplyMatrix,
@@ -22,6 +23,7 @@ interface DiceInfo {
   kept: boolean
   topside: number
   keptOrder: number
+  representativeMatrix?: TMatrix
 }
 
 /** The initial dice info list value for a `useState` */
@@ -49,6 +51,7 @@ export function Dices(): ReactElement {
     s.diceTouchDisabled,
     s.setDiceTouchDisabled,
   ])
+  const [rollCounter, increaseRollCounter] = useReducer((x) => x + 1, 0)
 
   /** Roll the dice with the id `id` */
   const roll = (id: number) => {
@@ -90,8 +93,25 @@ export function Dices(): ReactElement {
         return next
       })
       setTouchDisabled(false)
+      increaseRollCounter()
     }, 100 * 21 + 500 + 200 /* magic number */)
   }
+
+  useEffect(() => {
+    setTimeout(() => {
+      setDiceInfos((prev) => {
+        const next = [...prev]
+        const unkepts = next.filter((di) => !di.kept)
+        unkepts.forEach((di) => {
+          const theDice = next[di.id - 1]
+          console.log('aa', theDice.topside, matrixToTopside(theDice.accumMatrix))
+          theDice.accumMatrix = getRepresentativeMatrix(matrixToTopside(theDice.accumMatrix)!)
+          theDice.representativeMatrix = theDice.accumMatrix
+        })
+        return next
+      })
+    }, 500)
+  }, [rollCounter])
 
   /** Toggle the keep of the dice of the id */
   const onDiceClick = (id: number) => {
@@ -117,10 +137,10 @@ export function Dices(): ReactElement {
   return (
     <div css={CSS.root}>
       <div css={CSS.diceRow}>
-        {diceInfos.map(({ id, order, matricesPerTerm, kept, keptOrder }) => (
+        {diceInfos.map(({ id, order, matricesPerTerm, kept, keptOrder, representativeMatrix }) => (
           <Dice
             key={id}
-            {...{ order, id, kept, onClick: onDiceClick, keptOrder }}
+            {...{ order, id, kept, onClick: onDiceClick, keptOrder, representativeMatrix }}
             transformationMatrixSequence={matricesPerTerm}
           />
         ))}

@@ -291,6 +291,25 @@ export function matrixToString(matrix: TMatrix) {
   return matrix.map((row) => row.map((el) => String(el).padStart(3)).join('')).join('\n')
 }
 
+export function getRepresentativeMatrix(topside: number) {
+  switch (topside) {
+    case 1:
+      return _side[1][0]
+    case 2:
+      return _side[2][0]
+    case 3:
+      return _side[3][0]
+    case 4:
+      return _side[4][1]
+    case 5:
+      return _side[5][0]
+    case 6:
+      return _side[6][0]
+    default:
+      return _side[1][0]
+  }
+}
+
 // https://gist.github.com/f5io/7466669
 // Get 3D CSS rotation value from matrix3d() with JavaScript https://stackoverflow.com/questions/34450835/get-3d-css-rotation-value-from-matrix3d-with-javascript
 
