@@ -1,12 +1,14 @@
+/** @jsxImportSource @emotion/react */
+import { cx } from '@emotion/css'
+import { css } from '@emotion/react'
 import React, { ReactElement } from 'react'
-import { PlayerScore, ScoreState, useScoreStore } from '../../modules/score/store'
-import { TCategories } from '../../modules/score/type'
-import { computeFromDieSequence, isNumber, UNWRITABLE_CATEGORIES } from '../../modules/score/util'
-import styles from './ScoreBoard.module.css'
+import { PlayerScore, ScoreState, useScoreStore } from '../modules/score/store'
+import { TCategories } from '../modules/score/type'
+import { computeFromDieSequence, isNumber, UNWRITABLE_CATEGORIES } from '../modules/score/util'
 
 export interface ScoreBoardProps {}
 
-function ScoreBoard({}: ScoreBoardProps): ReactElement {
+export function ScoreBoard({}: ScoreBoardProps): ReactElement {
   const [players, nowPlayer, rounds, playerScores, dices, writeScore, diceTouchDisabled, endRound] = useScoreStore(
     (s) => [s.players, s.nowPlayer, s.rounds, s.playerScores, s.dices, s.writeScore, s.diceTouchDisabled, s.endRound]
   )
@@ -21,8 +23,8 @@ function ScoreBoard({}: ScoreBoardProps): ReactElement {
   }
   const commonProps = { players, playerScores, nowPlayer, onClick, computed, diceTouchDisabled }
   return (
-    <div className={styles.root}>
-      <div className={styles.border}>
+    <div css={CSS.root}>
+      <div css={CSS.border}>
         <ScoreItem {...commonProps} name="Aces" scoreName={'aces'} />
         <ScoreItem {...commonProps} name="Deuces" scoreName={'deuces'} />
         <ScoreItem {...commonProps} name="Threes" scoreName={'threes'} />
@@ -43,8 +45,6 @@ function ScoreBoard({}: ScoreBoardProps): ReactElement {
     </div>
   )
 }
-
-export default ScoreBoard
 
 export interface ScoreItemProps {
   players: ScoreState['players']
@@ -72,10 +72,9 @@ function ScoreItem({
     computed?.[scoreName] !== undefined &&
     !diceTouchDisabled &&
     !UNWRITABLE_CATEGORIES.has(scoreName)
-  const className_ScoreItem = styles.ScoreItem + (writable ? ` ${styles.writable}` : '')
   return (
-    <div className={className_ScoreItem} data-score-name={scoreName} onClick={onClick}>
-      <div className={styles.cell}>{name}</div>
+    <div css={CSS.ScoreItem} className={cx({ writable })} data-score-name={scoreName} onClick={onClick}>
+      <div css={CSS.cell}>{name}</div>
       {players.map((id) => {
         const ps = playerScores.get(id) as PlayerScore
         const width = `calc(100% / ${players.length || 1})`
@@ -83,16 +82,67 @@ function ScoreItem({
         const scoreComputed: number | undefined = writable && id === nowPlayer ? computed?.[scoreName] : undefined
         const scoreOnView: number = scoreWrited === undefined ? scoreComputed ?? 0 : scoreWrited
         const visibility = scoreWrited === undefined && scoreComputed === undefined ? 'hidden' : 'visible'
-        const className_cell = styles.cell + (id !== players[0] ? ` ${styles.noleftborder}` : '')
         const [opacity, fontWeight] =
           scoreWrited === undefined && scoreComputed !== undefined ? [0.5, 400] : [1, undefined]
         if (scoreName === 'fullHouse') console.log({ scoreWrited, scoreComputed, scoreOnView })
         return (
-          <div className={className_cell} key={ps.id} style={{ width }}>
+          <div css={CSS.cell} className={cx({ noleftborder: id !== players[0] })} key={ps.id} style={{ width }}>
             <span style={{ visibility, opacity, fontWeight }}>{scoreOnView}</span>
           </div>
         )
       })}
     </div>
   )
+}
+
+const CSS = {
+  root: css`
+    width: 35vmin;
+    margin-top: auto;
+    margin-bottom: auto;
+  `,
+  border: css`
+    border-radius: 7px;
+    border: 2px solid brown;
+    display: flex;
+    flex-flow: row wrap;
+    padding: 3px;
+    line-height: 1.2;
+  `,
+
+  cell: css`
+    border: 1px solid #000;
+    width: 100%;
+    padding: 0 2px 0 0;
+    font-weight: 700;
+    text-align: center;
+    box-sizing: border-box;
+    &:first-child {
+      border-bottom: none;
+      margin-top: 1px;
+    }
+    &.noleftborder {
+      border-left: none;
+    }
+  `,
+  ScoreItem: css`
+    margin: 0 0 0px 0;
+    width: calc(100% - 5px);
+    display: flex;
+    flex-flow: row wrap;
+    &.writable {
+      animation: 1.5s ease-in-out emphasize-writable infinite;
+    }
+    @keyframes emphasize-writable {
+      from {
+        background-color: rgba(0, 102, 231, 10%);
+      }
+      50% {
+        background-color: rgba(212, 7, 15, 10%);
+      }
+      to {
+        background-color: rgba(0, 102, 231, 10%);
+      }
+    }
+  `,
 }
