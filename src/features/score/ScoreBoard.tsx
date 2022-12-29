@@ -2,9 +2,9 @@
 import { cx } from '@emotion/css'
 import { css } from '@emotion/react'
 import React, { ReactElement } from 'react'
-import { PlayerScore, ScoreState, useScoreStore } from '../modules/score/store'
-import { TCategories } from '../modules/score/type'
-import { computeFromDieSequence, isNumber, UNWRITABLE_CATEGORIES } from '../modules/score/util'
+import { PlayerScore, ScoreState, useScoreStore } from '../score/store'
+import { TCategories } from '../score/type'
+import { computeFromDieSequence, isNumber, UNWRITABLE_CATEGORIES } from '../score/util'
 
 export interface ScoreBoardProps {}
 

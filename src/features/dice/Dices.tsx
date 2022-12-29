@@ -2,17 +2,17 @@
 import { cx } from '@emotion/css'
 import { css } from '@emotion/react'
 import { ReactElement, useEffect, useReducer, useState } from 'react'
-import { TMatrix } from '../modules/dice/type'
+import { getRandomIntInclusive } from '../../common/util'
+import { TMatrix } from './type'
 import {
   displayLeftRollsEmoji,
-  getRandomIntInclusive,
   getRepresentativeMatrix,
   identityMatrixFourByFour,
   matrixToTopside,
   multiplyMatrix,
   rotatorRandomXyz,
-} from '../modules/dice/util'
-import { useScoreStore } from '../modules/score/store'
+} from './util'
+import { useScoreStore } from '../score/store'
 import { Dice } from './Dice'
 
 interface DiceInfo {
@@ -44,7 +44,6 @@ const INITIAL_DICE_INFO_LIST: DiceInfo[] = Array(6)
 
 export function Dices(): ReactElement {
   const [diceInfos, setDiceInfos] = useState<DiceInfo[]>(INITIAL_DICE_INFO_LIST)
-  // const [touchDisabled, setTouchDisabled] = useState<boolean>(false);
   const [leftRolls, setLeftRolls] = useState<number>(3)
   const [setDices, touchDisabled, setTouchDisabled] = useScoreStore((s) => [
     s.setDices,
@@ -82,16 +81,6 @@ export function Dices(): ReactElement {
     setLeftRolls((prev) => prev - 1)
     /* Sort dices on the screen after a shaking */
     setTimeout(() => {
-      setDiceInfos((prev) => {
-        const next = prev.map((di) => ({ ...di, topside: matrixToTopside(di.accumMatrix) || 1 }))
-        const unkepts = next.filter((di) => !di.kept).sort((a, b) => a.topside - b.topside)
-        const oneToFive = [5, 4, 3, 2, 1]
-        unkepts.forEach((di) => {
-          next[di.id - 1].order = oneToFive.pop() || 1
-        })
-        setDices(next.map((di) => di.topside))
-        return next
-      })
       setTouchDisabled(false)
       increaseRollCounter()
     }, 100 * 21 + 500 + 200 /* magic number */)
@@ -99,41 +88,16 @@ export function Dices(): ReactElement {
 
   useEffect(() => {
     setTimeout(() => {
-      setDiceInfos((prev) => {
-        const next = [...prev]
-        const unkepts = next.filter((di) => !di.kept)
-        unkepts.forEach((di) => {
-          const theDice = next[di.id - 1]
-          console.log('aa', theDice.topside, matrixToTopside(theDice.accumMatrix))
-          theDice.accumMatrix = getRepresentativeMatrix(matrixToTopside(theDice.accumMatrix)!)
-          theDice.representativeMatrix = theDice.accumMatrix
-        })
-        return next
-      })
+      // align unkeeps
     }, 500)
   }, [rollCounter])
 
   /** Toggle the keep of the dice of the id */
   const onDiceClick = (id: number) => {
     if (touchDisabled || leftRolls === 3) return
-    setDiceInfos((prev) => {
-      const next = [...prev]
-      const keptOrders = new Set(next.filter((__) => __.kept).map((__) => __.keptOrder))
-      const orders = new Set(next.filter((__) => !__.kept).map((__) => __.order))
-      const dice = { ...next[id - 1], kept: !next[id - 1].kept }
-      if (dice.kept) {
-        dice.keptOrder = Math.min(...[1, 2, 3, 4, 5].filter((__) => !keptOrders.has(__)))
-      } else {
-        dice.order = Math.min(...[1, 2, 3, 4, 5].filter((__) => !orders.has(__)))
-      }
-      next[id - 1] = dice
-      return next
-    })
+    //
   }
-  const buttonClassName = cx({
-    leftZeroRolls: !leftRolls || diceInfos.every((__) => __.kept),
-    bouncing: leftRolls === 3,
-  })
+
   return (
     <div css={CSS.root}>
       <div css={CSS.diceRow}>
@@ -145,7 +109,15 @@ export function Dices(): ReactElement {
           />
         ))}
       </div>
-      <button css={CSS.roll} className={buttonClassName} onClick={onRoll} disabled={touchDisabled}>
+      <button
+        css={CSS.roll}
+        className={cx({
+          leftZeroRolls: !leftRolls || diceInfos.every((__) => __.kept),
+          bouncing: leftRolls === 3,
+        })}
+        onClick={onRoll}
+        disabled={touchDisabled}
+      >
         Roll the dices!
       </button>
       <span css={CSS.rollLeft}>

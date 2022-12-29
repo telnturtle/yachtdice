@@ -2,8 +2,8 @@
 import { css } from '@emotion/react'
 import { cx } from '@emotion/css'
 import { ReactElement, useCallback, useEffect, useState } from 'react'
-import { TMatrix } from '../modules/dice/type'
-import { identityMatrixFourByFour, makeMatrix3dTextFromMatrix, multiplyMatrix } from '../modules/dice/util'
+import { TMatrix } from './type'
+import { identityMatrixFourByFour, makeMatrix3dTextFromMatrix, multiplyMatrix } from './util'
 
 interface DiceProps {
   id: number

@@ -1,8 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
-import { useScoreStore } from '../modules/score/store'
-import { DiceKeep } from './DiceKeep'
-import { Dices } from './Dices'
+import { useScoreStore } from './store'
+import { DiceKeep } from '../dice/DiceKeep'
+import { Dices } from '../dice/Dices'
 import { ScoreBoard } from './ScoreBoard'
 
 export function Board() {
