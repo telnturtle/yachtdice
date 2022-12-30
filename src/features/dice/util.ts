@@ -1,5 +1,5 @@
 import { XYZ } from '../../common/type'
-import { getRandomIntInclusive } from '../../common/util'
+import { coinToss, getRandomIntInclusive } from '../../common/util'
 import { BasicRotationDirection, TMatrix } from './type'
 
 export const identityMatrixFourByFour: TMatrix = [
@@ -150,18 +150,6 @@ const _side = {
   ],
   2: [
     [
-      [-1, 0, 0, 0],
-      [0, 0, 1, 0],
-      [0, 1, 0, 0],
-      [0, 0, 0, 1],
-    ],
-    [
-      [1, 0, 0, 0],
-      [0, 0, 1, 0],
-      [0, -1, 0, 0],
-      [0, 0, 0, 1],
-    ],
-    [
       [0, 1, 0, 0],
       [0, 0, 1, 0],
       [1, 0, 0, 0],
@@ -171,6 +159,18 @@ const _side = {
       [0, -1, 0, 0],
       [0, 0, 1, 0],
       [-1, 0, 0, 0],
+      [0, 0, 0, 1],
+    ],
+    [
+      [-1, 0, 0, 0],
+      [0, 0, 1, 0],
+      [0, 1, 0, 0],
+      [0, 0, 0, 1],
+    ],
+    [
+      [1, 0, 0, 0],
+      [0, 0, 1, 0],
+      [0, -1, 0, 0],
       [0, 0, 0, 1],
     ],
   ],
@@ -329,6 +329,20 @@ export function getRepresentativeMatrix(topside: number) {
   }
 }
 
+export function changeToRepresentativeMatrix(matrix: TMatrix) {
+  const topside = matrixToTopside(matrix)
+  switch (topside) {
+    case 2:
+      return _side[2][coinToss() ? 0 : 1]
+    case 3:
+      return _side[3][coinToss() ? 0 : 1]
+    case 6:
+      return _side[6][coinToss() ? 0 : 1]
+    default:
+      return matrix
+  }
+}
+
 // https://gist.github.com/f5io/7466669
 // Get 3D CSS rotation value from matrix3d() with JavaScript https://stackoverflow.com/questions/34450835/get-3d-css-rotation-value-from-matrix3d-with-javascript
 
@@ -346,7 +360,75 @@ export function displayLeftRollsEmoji(leftRolls: number) {
 }
 
 export function getRandomDirection(): BasicRotationDirection {
-  const s: BasicRotationDirection[] = ['xcw', 'xcw', 'xcw', 'ycw', 'ycw', 'ycw', 'ycw', 'zcw']
+  const s: BasicRotationDirection[] = ['xcw', 'ycw', 'ycw', 'zcw']
   const i = getRandomIntInclusive(0, s.length - 1)
   return s[i]
+}
+
+export function getRandomDirectionBatch(n: number): BasicRotationDirection[] {
+  const s0: BasicRotationDirection[] = ['xcw', 'ycw', 'ycw', 'zcw']
+  const s1: BasicRotationDirection[] = ['xcw', 'xccw', 'ycw', 'yccw', 'zccw']
+  const s2: BasicRotationDirection[] = ['ycw', 'ycw', 'ycw', 'ycw', 'zcw']
+  const r = coinToss() ? s0 : coinToss() ? s1 : coinToss() ? s2 : s0
+  let count = n
+  const result: BasicRotationDirection[] = []
+  while (count) {
+    count--
+    result.push(r[getRandomIntInclusive(0, r.length - 1)])
+  }
+  return result
+}
+
+export function getRandomLengthDirectionBatch(): BasicRotationDirection[] {
+  const result: BasicRotationDirection[] = []
+  let s: BasicRotationDirection[] = ['xcw', 'ycw', 'ycw', 'zcw']
+  let count = getRandomIntInclusive(10, 30)
+  if (coinToss()) {
+    // do nothing
+  } else if (coinToss()) {
+    s = ['xccw', 'xccw', 'xccw', 'yccw', 'zccw']
+    count += 10
+  } else if (coinToss()) {
+    s = ['ycw', 'ycw', 'ycw', 'ycw', 'zcw']
+    count += 20
+  } else if (coinToss()) {
+    s = ['yccw', 'zccw']
+    count += 30
+  }
+  if (coinToss()) {
+    count += getRandomIntInclusive(0, 5)
+  } else {
+    count -= getRandomIntInclusive(0, 5)
+  }
+  while (count) {
+    count--
+    result.push(s[getRandomIntInclusive(0, s.length - 1)])
+  }
+  return result
+}
+
+const tiltMatrixMultiplier: TMatrix = multiplyMatrix(
+  [
+    [1, 0, 0, 0],
+    [0, Math.cos(-Math.PI / 16), Math.sin(-Math.PI / 16), 0],
+    [0, -Math.sin(-Math.PI / 16), Math.cos(-Math.PI / 16), 0],
+    [0, 0, 0, 1],
+  ],
+  [
+    [Math.cos(Math.PI / 16), 0, Math.sin(Math.PI / 16), 0],
+    [0, 1, 0, 0],
+    [-Math.sin(Math.PI / 16), 0, Math.cos(Math.PI / 16), 0],
+    [0, 0, 0, 1],
+  ]
+)
+
+export const tiltMatrix3dText = makeMatrix3dTextFromMatrix(tiltMatrixMultiplier)
+
+/**
+ *
+ * @param matrix 행렬 피연산자
+ * @returns PI/16 만큼 X, Y축으로 기울인 행렬
+ */
+export function tiltMatrix(matrix: TMatrix): TMatrix {
+  return multiplyMatrix(matrix, tiltMatrixMultiplier)
 }

@@ -14,6 +14,9 @@ import {
 } from './util'
 import { useScoreStore } from '../score/store'
 import { Dice } from './Dice'
+import { RollButton } from './RollButton'
+import { useAppSelector } from '../../app/hooks'
+import { selectLeftRolls } from '../score/scoreSlice'
 
 interface DiceInfo {
   id: number
@@ -101,15 +104,14 @@ export function Dices(): ReactElement {
   return (
     <div css={CSS.root}>
       <div css={CSS.diceRow}>
-        {diceInfos.map(({ id, order, matricesPerTerm, kept, keptOrder, representativeMatrix }) => (
-          <Dice
-            key={id}
-            {...{ order, id, kept, onClick: onDiceClick, keptOrder, representativeMatrix }}
-            transformationMatrixSequence={matricesPerTerm}
-          />
-        ))}
+        <Dice key={0} id={0} />
+        <Dice key={1} id={1} />
+        <Dice key={2} id={2} />
+        <Dice key={3} id={3} />
+        <Dice key={4} id={4} />
       </div>
-      <button
+      <RollButton />
+      {/* <button
         css={CSS.roll}
         className={cx({
           leftZeroRolls: !leftRolls || diceInfos.every((__) => __.kept),
@@ -119,12 +121,19 @@ export function Dices(): ReactElement {
         disabled={touchDisabled}
       >
         Roll the dices!
-      </button>
-      <span css={CSS.rollLeft}>
-        <span className="head">{displayLeftRollsEmoji(leftRolls).head}</span>
-        {displayLeftRollsEmoji(leftRolls).tail}
-      </span>
+      </button> */}
+      <RollLeft />
     </div>
+  )
+}
+
+function RollLeft() {
+  const leftRolls = useAppSelector(selectLeftRolls)
+  return (
+    <span css={CSS.rollLeft}>
+      <span className="head">{displayLeftRollsEmoji(leftRolls).head}</span>
+      {displayLeftRollsEmoji(leftRolls).tail}
+    </span>
   )
 }
 
@@ -181,8 +190,10 @@ const CSS = {
   `,
   rollLeft: css`
     position: absolute;
-    bottom: 36vmin;
-    right: 4vmin;
+    bottom: calc(3.375 * min(16vw, 9vh));
+    width: calc(2 * min(16vw, 9vh));
+    text-align: center;
+    right: 0;
     font-weight: 700;
     color: #222;
     font-size: 140%;

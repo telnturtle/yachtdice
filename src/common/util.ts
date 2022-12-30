@@ -16,3 +16,7 @@ export function getRandomIntInclusive(min: number, max: number): number {
   max = Math.floor(max)
   return Math.floor(Math.random() * (max - min + 1)) + min //최댓값도 포함, 최솟값도 포함
 }
+
+export function coinToss(): boolean {
+  return Math.random() > 0.5
+}

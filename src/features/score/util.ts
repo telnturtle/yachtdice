@@ -53,7 +53,7 @@ export function add(a: number, b: number): number {
 }
 function foak(sides: Record<number, number>): number {
   for (const i of arrayOfOneToSix) {
-    if (sides[i] >= 4) return sides[i] * i
+    if (sides[i] >= 4) arrayOfOneToSix.map((i) => sides[i]).reduce(add)
   }
   return 0
 }

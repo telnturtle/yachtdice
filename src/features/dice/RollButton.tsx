@@ -2,11 +2,13 @@
 import { cx } from '@emotion/css'
 import { css } from '@emotion/react'
 import { ReactElement, useEffect, useReducer, useRef, useState } from 'react'
-import { getRandomIntInclusive } from '../../common/util'
-import { TMatrix } from './type'
+import { coinToss, getRandomIntInclusive } from '../../common/util'
+import { BasicRotationDirection, TMatrix } from './type'
 import {
   displayLeftRollsEmoji,
   getRandomDirection,
+  getRandomDirectionBatch,
+  getRandomLengthDirectionBatch,
   getRepresentativeMatrix,
   identityMatrixFourByFour,
   matrixToTopside,
@@ -16,7 +18,30 @@ import {
 import { useScoreStore } from '../score/store'
 import { Dice } from './Dice'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import { alignUnkeeps, rotateBatch, selectDice0, selectDiceKeeps, sortUnkeeps, toggleTilt } from './diceSlice'
+import {
+  alignUnkeeps,
+  rotateBatch,
+  selectDice0,
+  selectDiceIdsUnkept,
+  selectDiceKeeps,
+  selectDices,
+  selectDicesUnkept,
+  selectUnkeepDicesByOrder,
+  selectUnkeptDiceIdsOrdersTable,
+  sortUnkeeps,
+  toggleTilt,
+  toggleTiltByOrder,
+} from './diceSlice'
+import {
+  decreaseLeftRolls,
+  selectDiceFreezed,
+  selectLeftRolls,
+  selectRollFreezed,
+  toggleDiceFreezed,
+  toggleRollFreezed,
+} from '../score/scoreSlice'
+import { ZFour } from '../../common/type'
+import { shallowEqual } from 'react-redux'
 
 interface DiceInfo {
   id: number
@@ -45,158 +70,142 @@ const INITIAL_DICE_INFO_LIST: DiceInfo[] = Array(6)
   )
   .slice(1)
 
-export function Dices(): ReactElement {
+export function RollButton(): ReactElement {
   const keeps = useAppSelector(selectDiceKeeps)
   const dispatch = useAppDispatch()
   const timerRef = useRef<number | null>(null)
-  const [leftRolls, setLeftRolls] = useState<number>(3)
-  const [touchDisabled, setTouchDisabled] = useScoreStore((s) => [s.diceTouchDisabled, s.setDiceTouchDisabled])
+  const timerUntiltRef = useRef<number | null>(null)
+  // const [leftRolls, setLeftRolls] = useState<number>(3)
+  const leftRolls = useAppSelector(selectLeftRolls)
+  const diceFreezed = useAppSelector(selectDiceFreezed)
+  const rollFreezed = useAppSelector(selectRollFreezed)
+  const unkeptDiceIdsOrdersTable = useAppSelector(selectUnkeptDiceIdsOrdersTable)
+  const dicesUnkept = useAppSelector(selectDicesUnkept)
+  const dices = useAppSelector(selectDices)
+  const diceIdsUnkept = useAppSelector(selectDiceIdsUnkept)
+  const unkeepDicesByOrder = useAppSelector(selectUnkeepDicesByOrder)
+  // const [tiltSignal, signalTilt] = useReducer((x) => x + 1, 0)
+  const [toggleTiltSignal, signalToggleTilt] = useReducer((x) => (x === 140 ? 80 : 140), 140)
+  // /** Roll the dice with the id `id` */
+  // const roll = (id: number) => {
+  //   // tilt
+  //   //
+  //   //
 
-  /** Roll the dice with the id `id` */
-  const roll = (id: number) => {
-    // tilt
-    //
-    //
-
-    const numberRolls = getRandomIntInclusive(15, 21)
-    const rolls = Array(numberRolls).fill(0).map(rotatorRandomXyz)
-    setDiceInfos((prev) => {
-      const next = [...prev]
-      next[id - 1] = {
-        ...prev[id - 1],
-        accumMatrix: rolls.reduce(multiplyMatrix, prev[id - 1].accumMatrix),
-        matricesPerTerm: rolls,
-      }
-      return next
-    })
-  }
+  //   const numberRolls = getRandomIntInclusive(15, 21)
+  //   const rolls = Array(numberRolls).fill(0).map(rotatorRandomXyz)
+  //   setDiceInfos((prev) => {
+  //     const next = [...prev]
+  //     next[id - 1] = {
+  //       ...prev[id - 1],
+  //       accumMatrix: rolls.reduce(multiplyMatrix, prev[id - 1].accumMatrix),
+  //       matricesPerTerm: rolls,
+  //     }
+  //     return next
+  //   })
+  // }
 
   /** Roll the dices */
   const onRoll = () => {
-    if (touchDisabled || !leftRolls || keeps.every(Boolean) || timerRef.current !== null) return
-    setTouchDisabled(true)
-    let count = 0
+    if (rollFreezed || !leftRolls || keeps.every(Boolean) || timerRef.current !== null) return
+    dispatch(toggleDiceFreezed())
+    dispatch(toggleRollFreezed())
+    dispatch(decreaseLeftRolls())
+    const count = {
+      tilt: 1,
+      first: getRandomIntInclusive(10, 14),
+      diceIndex: 0,
+      diceDelayer: false,
+      dices: [
+        diceIdsUnkept.has(0) ? getRandomLengthDirectionBatch() : [],
+        diceIdsUnkept.has(1) ? getRandomLengthDirectionBatch() : [],
+        diceIdsUnkept.has(2) ? getRandomLengthDirectionBatch() : [],
+        diceIdsUnkept.has(3) ? getRandomLengthDirectionBatch() : [],
+        diceIdsUnkept.has(4) ? getRandomLengthDirectionBatch() : [],
+      ],
+      second: getRandomIntInclusive(5, 8),
+      sort: 1,
+      third: getRandomIntInclusive(3, 5),
+      align: 1,
+      fourth: getRandomIntInclusive(3, 5),
+      untilt: 1,
+      fifth: getRandomIntInclusive(3, 5),
+    }
+    const table = unkeptDiceIdsOrdersTable
     timerRef.current = window.setInterval(() => {
-      if (count === 0) {
-        // tilt 0
-        dispatch(toggleTilt(0))
-      } else if (count === 1) {
-        // tilt 1
-        dispatch(toggleTilt(1))
-      } else if (count === 2) {
-        // tilt 2
-        dispatch(toggleTilt(2))
-      } else if (count === 3) {
-        // tilt 3
-        dispatch(toggleTilt(3))
-      } else if (count === 4) {
-        // tilt 4
-        dispatch(toggleTilt(4))
-      } else if (count === 5) {
-        // roll dice 0
-        dispatch(rotateBatch([[0, getRandomDirection()]]))
-      } else if (count === 6) {
-        // roll dice 0, 1
-        dispatch(
-          rotateBatch([
-            [0, getRandomDirection()],
-            [1, getRandomDirection()],
-          ])
-        )
-      } else if (count === 7) {
-        // roll dice 0-2
-        dispatch(
-          rotateBatch([
-            [0, getRandomDirection()],
-            [1, getRandomDirection()],
-            [2, getRandomDirection()],
-          ])
-        )
-      } else if (count === 8) {
-        // roll dice 0-3
-        dispatch(
-          rotateBatch([
-            [0, getRandomDirection()],
-            [1, getRandomDirection()],
-            [2, getRandomDirection()],
-            [3, getRandomDirection()],
-          ])
-        )
-      } else if (count < 35) {
-        // roll dice 0-4
-        dispatch(
-          rotateBatch([
-            [0, getRandomDirection()],
-            [1, getRandomDirection()],
-            [2, getRandomDirection()],
-            [3, getRandomDirection()],
-            [4, getRandomDirection()],
-          ])
-        )
-      } else if (count === 35) {
-        // roll dice 1-4
-        dispatch(
-          rotateBatch([
-            [1, getRandomDirection()],
-            [2, getRandomDirection()],
-            [3, getRandomDirection()],
-            [4, getRandomDirection()],
-          ])
-        )
-      } else if (count === 36) {
-        // roll dice 2-4
-        dispatch(
-          rotateBatch([
-            [2, getRandomDirection()],
-            [3, getRandomDirection()],
-            [4, getRandomDirection()],
-          ])
-        )
-      } else if (count === 37) {
-        // roll dice 3, 4
-        dispatch(
-          rotateBatch([
-            [3, getRandomDirection()],
-            [4, getRandomDirection()],
-          ])
-        )
-      } else if (count === 38) {
-        // roll dice 4
-        dispatch(rotateBatch([[4, getRandomDirection()]]))
-      } else if (count < 49) {
-        // do nothing
-      } else if (count === 49) {
-        // untilt 0
-        dispatch(toggleTilt(0))
-      } else if (count === 50) {
-        // untilt 1
-        dispatch(toggleTilt(1))
-      } else if (count === 51) {
-        // untilt 2
-        dispatch(toggleTilt(2))
-      } else if (count === 52) {
-        // untilt 3
-        dispatch(toggleTilt(3))
-      } else if (count === 53) {
-        // untilt 4
-        dispatch(toggleTilt(4))
-      } else if (count < 59) {
-        // do nothing
-      } else if (count === 59) {
-        // sort unkeeps
+      if (count.tilt) {
+        signalToggleTilt()
+        count.tilt--
+      } else if (count.first) {
+        count.first--
+      } else if (count.dices.map(({ length }) => length).some(Boolean)) {
+        const batch: [ZFour, BasicRotationDirection][] = []
+
+        for (let i = 0; i <= Math.min(count.diceIndex, count.dices.length); i++) {
+          if (table.has(i as ZFour) && count.dices[table.get(i as ZFour)!].length) {
+            if (count.dices[table.get(i as ZFour)!].length === 1) {
+              // count.untilt[table.get(i as ZFour)!] = 14
+              // count.untilt[table.get(i as ZFour)!] = 1
+            }
+            batch.push([table.get(i as ZFour)!, count.dices[table.get(i as ZFour)!].pop()!])
+          }
+        }
+        // for (let i = 0; i <= Math.min(count.diceIndex, count.dices.length); i++) {
+        //   if (table.has(i as ZFour) && count.dices[table.get(i as ZFour)!].length) {
+        //     batch.push([table.get(i as ZFour)!, count.dices[table.get(i as ZFour)!].pop()!])
+        //   }
+        // }
+        // Object.keys(count.untilt).forEach((id) => {
+        //   if (count.untilt[id as unknown as ZFour] === 1) {
+        //     dispatch(toggleTilt(Number(id) as ZFour))
+        //   }
+        //   count.untilt[id as unknown as ZFour]--
+        // })
+
+        count.diceDelayer = !count.diceDelayer
+        if (!count.diceDelayer) count.diceIndex++
+        dispatch(rotateBatch(batch))
+      } else if (count.second) {
+        count.second--
+        // Object.keys(count.untilt).forEach((id) => {
+        //   if (count.untilt[id as unknown as ZFour] === 1) {
+        //     dispatch(toggleTilt(Number(id) as ZFour))
+        //   }
+        //   count.untilt[id as unknown as ZFour]--
+        // })
+      } else if (count.sort) {
         dispatch(sortUnkeeps())
-      } else if (count < 69) {
-        // do nothing
-      } else {
+        count.sort--
+      } else if (count.third) {
+        count.third--
+      } else if (count.align) {
+        count.align--
         // align unkeeps
         dispatch(alignUnkeeps())
+      } else if (count.fourth) {
+        count.fourth--
+      } else if (count.untilt) {
+        signalToggleTilt()
+        count.untilt--
+      } else if (count.fifth) {
+        count.fifth--
+      } else {
+        dispatch(toggleDiceFreezed())
+        dispatch(toggleRollFreezed())
         clearInterval(timerRef.current!)
         timerRef.current = null
       }
-      count++
     }, 70)
-    setLeftRolls((prev) => prev - 1)
   }
+
+  useEffect(() => {
+    let orderIndex: ZFour = 0
+    const t = window.setInterval(() => {
+      dispatch(toggleTiltByOrder(orderIndex))
+      orderIndex++
+      if (orderIndex === 5) clearInterval(t)
+    }, toggleTiltSignal)
+  }, [dispatch, toggleTiltSignal])
 
   return (
     <>
@@ -207,7 +216,7 @@ export function Dices(): ReactElement {
           bouncing: leftRolls === 3,
         })}
         onClick={onRoll}
-        disabled={touchDisabled}
+        disabled={rollFreezed || leftRolls === 0}
       >
         Roll the dices!
       </button>
@@ -241,8 +250,8 @@ const CSS = {
     color: #f0f0f0;
     font-weight: 900;
     font-size: larger;
-    width: 20vmin;
-    height: 30vmin;
+    width: calc(2 * min(16vw, 9vh));
+    height: calc(3 * min(16vw, 9vh));
     opacity: 0.9;
     border: none;
     &:disabled {

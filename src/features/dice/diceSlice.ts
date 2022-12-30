@@ -1,8 +1,9 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../../app/store'
 import { ZFour } from '../../common/type'
 import { BasicRotationDirection, TMatrix } from './type'
 import {
+  changeToRepresentativeMatrix,
   getRepresentativeMatrix,
   identityMatrixFourByFour,
   matrixToTopside,
@@ -60,13 +61,13 @@ export const diceSlice = createSlice({
       state.dices[action.payload.id].matrix = action.payload.matrix
     },
     sortUnkeeps: (state) => {
-      const unkeeps = state.dices.filter(({ keep }) => !keep).sort((a, b) => a.topside - b.topside)
-      const fOne: ZFour[] = [5, 4, 3, 2, 1]
-      unkeeps.forEach((d) => {
-        state.dices[d.id].order = fOne.pop() || 1
-      })
       state.dices.forEach((d) => {
-        d.topside = matrixToTopside(d.matrix) || 1
+        d.topside = matrixToTopside(d.matrix) ?? 1
+      })
+      const unkeeps = state.dices.filter(({ keep }) => !keep).sort((a, b) => a.topside - b.topside)
+      const array: ZFour[] = [4, 3, 2, 1, 0]
+      unkeeps.forEach((d) => {
+        state.dices[d.id].order = array.pop() ?? 0
       })
     },
     toggleKeep: (state, action: PayloadAction<ZFour>) => {
@@ -90,7 +91,7 @@ export const diceSlice = createSlice({
       const unkeeps = state.dices.filter((d) => !d.keep).map((d) => d.id)
       unkeeps.forEach((id) => {
         const theDice = state.dices[id]
-        theDice.matrix = getRepresentativeMatrix(matrixToTopside(theDice.matrix)!)
+        theDice.matrix = changeToRepresentativeMatrix(theDice.matrix)
       })
     },
     rotateBatch: (state, action: PayloadAction<[ZFour, BasicRotationDirection][]>) => {
@@ -100,6 +101,10 @@ export const diceSlice = createSlice({
     },
     toggleTilt: (state, action: PayloadAction<ZFour>) => {
       state.dices[action.payload].tilt = !state.dices[action.payload].tilt
+    },
+    toggleTiltByOrder: (state, action: PayloadAction<ZFour>) => {
+      const d = state.dices.find((dice) => dice.order === action.payload)
+      if (d) d.tilt = d.keep ? false : !d.tilt
     },
   },
 })
@@ -117,13 +122,25 @@ export const {
   alignUnkeeps,
   rotateBatch,
   toggleTilt,
+  toggleTiltByOrder,
 } = diceSlice.actions
 
+export const selectDices = (state: RootState) => state.dice.dices
+export const selectDicesUnkept = (state: RootState) => state.dice.dices.filter(({ keep }) => !keep)
+export const selectDiceIdsUnkept = (state: RootState) =>
+  new Set(state.dice.dices.filter(({ keep }) => !keep).map(({ id }) => id))
 export const selectDice0 = (state: RootState) => state.dice.dices[0]
 export const selectDice1 = (state: RootState) => state.dice.dices[1]
 export const selectDice2 = (state: RootState) => state.dice.dices[2]
 export const selectDice3 = (state: RootState) => state.dice.dices[3]
 export const selectDice4 = (state: RootState) => state.dice.dices[4]
 export const selectDiceKeeps = (state: RootState) => state.dice.dices.map(({ keep }) => keep)
+export const selectUnkeptDiceIdsOrdersTable = (state: RootState) =>
+  new Map<ZFour, ZFour>(state.dice.dices.filter(({ keep }) => !keep).map(({ id, order }) => [order, id]))
+export const selectUnkeepDicesByOrder = (state: RootState) => {
+  const array = state.dice.dices.filter(({ keep }) => !keep)
+  array.sort((a, b) => a.order - b.order)
+  return array
+}
 
 export const diceReducer = diceSlice.reducer
