@@ -2,7 +2,7 @@
 import { cx } from '@emotion/css'
 import { css } from '@emotion/react'
 import { ReactElement, useEffect, useReducer, useRef, useState } from 'react'
-import { coinToss, getRandomIntInclusive } from '../../common/util'
+import { aver, coinToss, getRandomIntInclusive } from '../../common/util'
 import { BasicRotationDirection, TMatrix } from './type'
 import {
   displayLeftRollsEmoji,
@@ -131,6 +131,13 @@ export function RollButton(): ReactElement {
       untilt: 1,
       fifth: getRandomIntInclusive(3, 5),
     }
+    console.log(count.second, '!!!', aver(count.dices.map(({ length }) => length).filter(Boolean)))
+    // count.second += Math.floor((Math.max(...count.dices.map(({ length }) => length)) - 25) / 4)
+    count.second += Math.floor((aver(count.dices.map(({ length }) => length).filter(Boolean)) - 20) * 0.5)
+    console.log(count.second, '!!!')
+    // count.third += Math.floor(Math.max(count.dices.length) / 2)
+    // count.fourth += Math.floor(Math.max(count.dices.length) / 3)
+    // count.fifth += Math.floor(Math.max(count.dices.length) / 4)
     const table = unkeptDiceIdsOrdersTable
     timerRef.current = window.setInterval(() => {
       if (count.tilt) {

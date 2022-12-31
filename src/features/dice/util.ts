@@ -382,7 +382,7 @@ export function getRandomDirectionBatch(n: number): BasicRotationDirection[] {
 export function getRandomLengthDirectionBatch(): BasicRotationDirection[] {
   const result: BasicRotationDirection[] = []
   let s: BasicRotationDirection[] = ['xcw', 'ycw', 'ycw', 'zcw']
-  let count = getRandomIntInclusive(10, 30)
+  let count = getRandomIntInclusive(15, 25)
   if (coinToss()) {
     // do nothing
   } else if (coinToss()) {

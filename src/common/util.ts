@@ -20,3 +20,7 @@ export function getRandomIntInclusive(min: number, max: number): number {
 export function coinToss(): boolean {
   return Math.random() > 0.5
 }
+
+export function aver(array: number[]): number {
+  return Math.floor(array.reduce((acc, cur) => acc + cur) / array.length)
+}
