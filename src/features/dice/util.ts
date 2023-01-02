@@ -387,13 +387,13 @@ export function getRandomLengthDirectionBatch(): BasicRotationDirection[] {
     // do nothing
   } else if (coinToss()) {
     s = ['xccw', 'xccw', 'xccw', 'yccw', 'zccw']
-    count += 10
+    count += 5
   } else if (coinToss()) {
     s = ['ycw', 'ycw', 'ycw', 'ycw', 'zcw']
-    count += 20
+    count += 10
   } else if (coinToss()) {
     s = ['yccw', 'zccw']
-    count += 30
+    count += 15
   }
   if (coinToss()) {
     count += getRandomIntInclusive(0, 5)

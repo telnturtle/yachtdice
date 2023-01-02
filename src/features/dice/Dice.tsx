@@ -1,36 +1,13 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
 import { cx } from '@emotion/css'
-import { ReactElement, useCallback, useEffect, useMemo, useState } from 'react'
+import { ReactElement, useCallback } from 'react'
 import { TMatrix } from './type'
-import {
-  identityMatrixFourByFour,
-  makeMatrix3dTextFromMatrix,
-  multiplyMatrix,
-  tiltMatrix,
-  tiltMatrix3dText,
-} from './util'
-import {
-  DiceMeta,
-  DiceState,
-  selectDice0,
-  selectDice1,
-  selectDice2,
-  selectDice3,
-  selectDice4,
-  toggleKeep,
-} from './diceSlice'
+import { makeMatrix3dTextFromMatrix, tiltMatrix } from './util'
+import { selectDiceById, toggleKeep } from './diceSlice'
 import { ZFour } from '../../common/type'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import { selectLeftRolls } from '../score/scoreSlice'
-
-const selectorById = {
-  0: selectDice0,
-  1: selectDice1,
-  2: selectDice2,
-  3: selectDice3,
-  4: selectDice4,
-}
+import { selectDiceShaking, selectLeftRolls } from '../score/scoreSlice'
 
 interface DiceProps {
   id: ZFour
@@ -38,17 +15,17 @@ interface DiceProps {
 
 /**
  * ⚀ ⚁ ⚂ ⚃ ⚄ ⚅
- *
- *
  */
 export function Dice({ id }: DiceProps): ReactElement {
-  const dice = useAppSelector(selectorById[id])
+  const dice = useAppSelector(selectDiceById[id])
   const leftRolls = useAppSelector(selectLeftRolls)
   const dispatch = useAppDispatch()
+  const diceShaking = useAppSelector(selectDiceShaking)
 
-  const onClick = useCallback(() => {
-    dispatch(toggleKeep(id))
-  }, [dispatch, id])
+  /* do not memoize this (low efficiency) */
+  const onClick = () => {
+    if (!diceShaking && leftRolls !== 3) dispatch(toggleKeep(id))
+  }
 
   return (
     <div
@@ -114,7 +91,7 @@ const diceCss = css`
   width: 100%;
   list-style-type: none;
   transform-style: preserve-3d;
-  transition: transform 0.125s ease-in-out;
+  transition: transform 0.15s ease-in-out;
   margin-inline-start: 0;
   padding-inline-start: 0;
   margin-block-start: 0;

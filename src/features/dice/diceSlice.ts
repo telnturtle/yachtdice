@@ -103,7 +103,7 @@ export const diceSlice = createSlice({
       state.dices[action.payload].tilt = !state.dices[action.payload].tilt
     },
     toggleTiltByOrder: (state, action: PayloadAction<ZFour>) => {
-      const d = state.dices.find((dice) => dice.order === action.payload)
+      const d = state.dices.find((dice) => dice.order === action.payload && !dice.keep)
       if (d) d.tilt = d.keep ? false : !d.tilt
     },
   },
@@ -134,7 +134,14 @@ export const selectDice1 = (state: RootState) => state.dice.dices[1]
 export const selectDice2 = (state: RootState) => state.dice.dices[2]
 export const selectDice3 = (state: RootState) => state.dice.dices[3]
 export const selectDice4 = (state: RootState) => state.dice.dices[4]
-export const selectDice = (state: RootState, index: ZFour) => state.dice.dices[index]
+
+export const selectDiceById: Record<ZFour, (state: RootState) => DiceMeta> = {
+  0: selectDice0,
+  1: selectDice1,
+  2: selectDice2,
+  3: selectDice3,
+  4: selectDice4,
+}
 export const selectDiceKeeps = (state: RootState) => state.dice.dices.map(({ keep }) => keep)
 export const selectUnkeptDiceIdsOrdersTable = (state: RootState) =>
   new Map<ZFour, ZFour>(state.dice.dices.filter(({ keep }) => !keep).map(({ id, order }) => [order, id]))

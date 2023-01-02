@@ -87,7 +87,7 @@ function ScoreItem({ players, label, name, pIndex, onClick, computed, diceShakin
         const [opacity, fontWeight] =
           scoreWrited === undefined && scoreComputed !== undefined ? [0.5, 400] : [1, undefined]
         return (
-          <div css={CSS.cell} className={cx({ noleftborder: playerMeta !== players[0] })} key={name} style={{ width }}>
+          <div css={CSS.cell} className={cx({ noleftborder: playerMeta !== players[0] })} key={playerMeta.index} style={{ width }}>
             <span style={{ visibility, opacity, fontWeight }}>{scoreTextNumber}</span>
           </div>
         )
