@@ -46,61 +46,6 @@ const INITIAL_DICE_INFO_LIST: DiceInfo[] = Array(6)
   .slice(1)
 
 export function Dices(): ReactElement {
-  const [diceInfos, setDiceInfos] = useState<DiceInfo[]>(INITIAL_DICE_INFO_LIST)
-  const [leftRolls, setLeftRolls] = useState<number>(3)
-  const [setDices, touchDisabled, setTouchDisabled] = useScoreStore((s) => [
-    s.setDices,
-    s.diceTouchDisabled,
-    s.setDiceTouchDisabled,
-  ])
-  const [rollCounter, increaseRollCounter] = useReducer((x) => x + 1, 0)
-
-  /** Roll the dice with the id `id` */
-  const roll = (id: number) => {
-    const numberRolls = getRandomIntInclusive(15, 21)
-    const rolls = Array(numberRolls).fill(0).map(rotatorRandomXyz)
-    setDiceInfos((prev) => {
-      const next = [...prev]
-      next[id - 1] = {
-        ...prev[id - 1],
-        accumMatrix: rolls.reduce(multiplyMatrix, prev[id - 1].accumMatrix),
-        matricesPerTerm: rolls,
-      }
-      return next
-    })
-  }
-
-  /** Roll the dices */
-  const onRoll = () => {
-    if (touchDisabled || !leftRolls || diceInfos.every((__) => __.kept)) return
-    /* Shakes the dices */
-    setTouchDisabled(true)
-    diceInfos.forEach((di) => {
-      if (!di.kept)
-        setTimeout(() => {
-          roll(di.id)
-        }, 50 * di.order)
-    })
-    setLeftRolls((prev) => prev - 1)
-    /* Sort dices on the screen after a shaking */
-    setTimeout(() => {
-      setTouchDisabled(false)
-      increaseRollCounter()
-    }, 100 * 21 + 500 + 200 /* magic number */)
-  }
-
-  useEffect(() => {
-    setTimeout(() => {
-      // align unkeeps
-    }, 500)
-  }, [rollCounter])
-
-  /** Toggle the keep of the dice of the id */
-  const onDiceClick = (id: number) => {
-    if (touchDisabled || leftRolls === 3) return
-    //
-  }
-
   return (
     <div css={CSS.root}>
       <div css={CSS.diceRow}>
@@ -111,17 +56,6 @@ export function Dices(): ReactElement {
         <Dice key={4} id={4} />
       </div>
       <RollButton />
-      {/* <button
-        css={CSS.roll}
-        className={cx({
-          leftZeroRolls: !leftRolls || diceInfos.every((__) => __.kept),
-          bouncing: leftRolls === 3,
-        })}
-        onClick={onRoll}
-        disabled={touchDisabled}
-      >
-        Roll the dices!
-      </button> */}
       <RollLeft />
     </div>
   )

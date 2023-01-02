@@ -1,6 +1,6 @@
 import create from 'zustand'
 import { TCategories } from './type'
-import { computeFromDieSequence, computeUnwritableCategories, isNumber } from './util'
+import { computeTopsides, computeUnwritableCategories, isNumber } from './util'
 
 // type _ = Object.create(null){ [K in keyof TCategories]?: number };
 export interface PlayerScore /* extends _*/ {
@@ -84,7 +84,7 @@ export const useScoreStore = create<ScoreState>((set) => ({
     set((state) => {
       console.log({ dices: state.dices, s: (state.playerScores.get(state.nowPlayer) as PlayerScore)[cat] })
       if (!state.dices || (state.playerScores.get(state.nowPlayer) as PlayerScore)[cat]) return state
-      const computed = computeFromDieSequence(state.dices)
+      const computed = computeTopsides(state.dices)
       const n = computed[cat]
       console.log(computed)
       console.log({ n })

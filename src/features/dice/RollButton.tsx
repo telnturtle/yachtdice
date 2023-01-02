@@ -34,10 +34,10 @@ import {
 } from './diceSlice'
 import {
   decreaseLeftRolls,
-  selectDiceFreezed,
+  selectDiceShaking,
   selectLeftRolls,
   selectRollFreezed,
-  toggleDiceFreezed,
+  toggleDiceShaking,
   toggleRollFreezed,
 } from '../score/scoreSlice'
 import { ZFour } from '../../common/type'
@@ -77,7 +77,7 @@ export function RollButton(): ReactElement {
   const timerUntiltRef = useRef<number | null>(null)
   // const [leftRolls, setLeftRolls] = useState<number>(3)
   const leftRolls = useAppSelector(selectLeftRolls)
-  const diceFreezed = useAppSelector(selectDiceFreezed)
+  const diceFreezed = useAppSelector(selectDiceShaking)
   const rollFreezed = useAppSelector(selectRollFreezed)
   const unkeptDiceIdsOrdersTable = useAppSelector(selectUnkeptDiceIdsOrdersTable)
   const dicesUnkept = useAppSelector(selectDicesUnkept)
@@ -108,7 +108,7 @@ export function RollButton(): ReactElement {
   /** Roll the dices */
   const onRoll = () => {
     if (rollFreezed || !leftRolls || keeps.every(Boolean) || timerRef.current !== null) return
-    dispatch(toggleDiceFreezed())
+    dispatch(toggleDiceShaking())
     dispatch(toggleRollFreezed())
     dispatch(decreaseLeftRolls())
     const count = {
@@ -197,7 +197,7 @@ export function RollButton(): ReactElement {
       } else if (count.fifth) {
         count.fifth--
       } else {
-        dispatch(toggleDiceFreezed())
+        dispatch(toggleDiceShaking())
         dispatch(toggleRollFreezed())
         clearInterval(timerRef.current!)
         timerRef.current = null

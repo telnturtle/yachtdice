@@ -8,7 +8,7 @@ export const UNWRITABLE_CATEGORIES: Set<TCategories> = new Set([
   'total' as TCategories,
 ])
 
-export function computeFromDieSequence(numbers: number[]): Record<TCategories, number> {
+export function computeTopsides(numbers: number[]): Record<TCategories, number> {
   const sides: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 }
   numbers.forEach((die: number): void => {
     sides[die]++

@@ -134,6 +134,7 @@ export const selectDice1 = (state: RootState) => state.dice.dices[1]
 export const selectDice2 = (state: RootState) => state.dice.dices[2]
 export const selectDice3 = (state: RootState) => state.dice.dices[3]
 export const selectDice4 = (state: RootState) => state.dice.dices[4]
+export const selectDice = (state: RootState, index: ZFour) => state.dice.dices[index]
 export const selectDiceKeeps = (state: RootState) => state.dice.dices.map(({ keep }) => keep)
 export const selectUnkeptDiceIdsOrdersTable = (state: RootState) =>
   new Map<ZFour, ZFour>(state.dice.dices.filter(({ keep }) => !keep).map(({ id, order }) => [order, id]))
@@ -142,5 +143,6 @@ export const selectUnkeepDicesByOrder = (state: RootState) => {
   array.sort((a, b) => a.order - b.order)
   return array
 }
+export const selectDiceTopsides = (state: RootState) => state.dice.dices.map(({ topside }) => topside)
 
 export const diceReducer = diceSlice.reducer

@@ -5,7 +5,7 @@ import { TCategoriesWritable } from './type'
 export interface ScoreState {
   players: PlayerMeta[]
   pIndex: number
-  diceFreezed: boolean
+  diceShaking: boolean
   leftRolls: number
   leftTurns: number
   rollFreezed: boolean
@@ -14,20 +14,20 @@ export interface ScoreState {
 export interface PlayerMeta /* extends _*/ {
   index: number
   name: string
-  aces: number
-  deuces: number
-  threes: number
-  fours: number
-  fives: number
-  sixes: number
+  aces?: number
+  deuces?: number
+  threes?: number
+  fours?: number
+  fives?: number
+  sixes?: number
   subtotal: number
   bonus: number
-  choice: number
-  fourOfAKind: number
-  fullHouse: number
-  smallStraight: number
-  largeStraight: number
-  yacht: number
+  choice?: number
+  fourOfAKind?: number
+  fullHouse?: number
+  smallStraight?: number
+  largeStraight?: number
+  yacht?: number
   total: number
 }
 
@@ -54,7 +54,7 @@ const defalutPlayerMeta: PlayerMeta = {
 const initialState: ScoreState = {
   players: [{ ...defalutPlayerMeta }, { ...defalutPlayerMeta, index: 1, name: 'Player Two' }],
   pIndex: 0,
-  diceFreezed: false,
+  diceShaking: false,
   leftRolls: 3,
   leftTurns: 12,
   rollFreezed: false,
@@ -70,8 +70,8 @@ export const scoreSlice = createSlice({
       state.leftTurns -= Number(state.pIndex === 0)
       state.leftRolls = 3
     },
-    toggleDiceFreezed: (state) => {
-      state.diceFreezed = !state.diceFreezed
+    toggleDiceShaking: (state) => {
+      state.diceShaking = !state.diceShaking
     },
     toggleRollFreezed: (state) => {
       state.rollFreezed = !state.rollFreezed
@@ -82,10 +82,13 @@ export const scoreSlice = createSlice({
   },
 })
 
-export const { writeScore, toggleDiceFreezed, toggleRollFreezed, decreaseLeftRolls } = scoreSlice.actions
+export const { writeScore, toggleDiceShaking, toggleRollFreezed, decreaseLeftRolls } = scoreSlice.actions
 
-export const selectDiceFreezed = (state: RootState) => state.score.diceFreezed
 export const selectRollFreezed = (state: RootState) => state.score.rollFreezed
 export const selectLeftRolls = (state: RootState) => state.score.leftRolls
+export const selectPlayer = (state: RootState) => state.score.players[state.score.pIndex]
+export const selectPlayers = (state: RootState) => state.score.players
+export const selectPIndex = (state: RootState) => state.score.pIndex
+export const selectDiceShaking = (state: RootState) => state.score.diceShaking
 
 export const scoreReducer = scoreSlice.reducer

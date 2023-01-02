@@ -22,6 +22,7 @@ import {
 } from './diceSlice'
 import { ZFour } from '../../common/type'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import { selectLeftRolls } from '../score/scoreSlice'
 
 const selectorById = {
   0: selectDice0,
@@ -42,31 +43,8 @@ interface DiceProps {
  */
 export function Dice({ id }: DiceProps): ReactElement {
   const dice = useAppSelector(selectorById[id])
+  const leftRolls = useAppSelector(selectLeftRolls)
   const dispatch = useAppDispatch()
-
-  // const TICK = 100
-  // const FLOATING = 250
-  // const [matrix, setMatrix] = useState<TMatrix>(identityMatrixFourByFour)
-  // const [float, setFloat] = useState<boolean>(false)
-
-  // const roll = useCallback((rolls: DiceProps['transformationMatrixSequence']) => {
-  //   setFloat(true)
-  //   for (let i = 0; i < rolls.length; i++) {
-  //     setTimeout(() => {
-  //       setMatrix((acc) => multiplyMatrix(acc, rolls[i]))
-  //     }, TICK * i + FLOATING)
-  //   }
-  //   setTimeout(() => {
-  //     setFloat(false)
-  //   }, TICK * rolls.length + FLOATING)
-  // }, [])
-
-  // useEffect(() => {
-  //   roll(tms)
-  // }, [tms, roll])
-  // useEffect(() => {
-  //   if (representativeMatrix) setMatrix(representativeMatrix)
-  // }, [representativeMatrix])
 
   const onClick = useCallback(() => {
     dispatch(toggleKeep(id))
