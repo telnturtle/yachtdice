@@ -1,4 +1,4 @@
-import { PlayerScore } from './store'
+import { PlayerMeta } from './scoreSlice'
 import { TCategories } from './type'
 
 const arrayOfOneToSix = Object.freeze([1, 2, 3, 4, 5, 6])
@@ -32,11 +32,11 @@ export function computeTopsides(numbers: number[]): Record<TCategories, number> 
   }
   return res
 }
-export function computeUnwritableCategories(ps: PlayerScore) {
-  const { aces, deuces, threes, fours, fives, sixes } = ps
+export function computeUnwritableCategories(pm: PlayerMeta) {
+  const { aces, deuces, threes, fours, fives, sixes } = pm
   const subtotal = ([aces, deuces, threes, fours, fives, sixes].filter(isNumber) as number[]).reduce(add, 0)
   const bonus = subtotal >= 63 ? 35 : 0
-  const { choice, fourOfAKind, fullHouse, smallStraight, largeStraight, yacht } = ps
+  const { choice, fourOfAKind, fullHouse, smallStraight, largeStraight, yacht } = pm
   const total = (
     [choice, fourOfAKind, fullHouse, smallStraight, largeStraight, yacht].filter(isNumber) as number[]
   ).reduce(add, subtotal)
@@ -53,7 +53,7 @@ export function add(a: number, b: number): number {
 }
 function foak(sides: Record<number, number>): number {
   for (const i of arrayOfOneToSix) {
-    if (sides[i] >= 4) arrayOfOneToSix.map((i) => sides[i]).reduce(add)
+    if (sides[i] >= 4) return arrayOfOneToSix.map((i) => i * sides[i]).reduce(add)
   }
   return 0
 }
@@ -89,4 +89,20 @@ function y(sides: Record<number, number>): number {
 }
 export function isNumber(value: any): boolean {
   return value === Number(value)
+}
+export function total(playerMeta: PlayerMeta): number {
+  return (
+    (playerMeta.aces ?? 0) +
+    (playerMeta.deuces ?? 0) +
+    (playerMeta.threes ?? 0) +
+    (playerMeta.fours ?? 0) +
+    (playerMeta.fives ?? 0) +
+    (playerMeta.sixes ?? 0) +
+    (playerMeta.choice ?? 0) +
+    (playerMeta.fourOfAKind ?? 0) +
+    (playerMeta.fullHouse ?? 0) +
+    (playerMeta.smallStraight ?? 0) +
+    (playerMeta.largeStraight ?? 0) +
+    (playerMeta.yacht ?? 0)
+  )
 }

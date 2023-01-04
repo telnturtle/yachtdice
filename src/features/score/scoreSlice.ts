@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../../app/store'
 import { TCategoriesWritable } from './type'
+import { computeUnwritableCategories, total } from './util'
 
 export interface ScoreState {
   players: PlayerMeta[]
@@ -34,20 +35,20 @@ export interface PlayerMeta /* extends _*/ {
 const defalutPlayerMeta: PlayerMeta = {
   index: 0,
   name: 'Player One',
-  aces: 0,
-  deuces: 0,
-  threes: 0,
-  fours: 0,
-  fives: 0,
-  sixes: 0,
+  aces: undefined,
+  deuces: undefined,
+  threes: undefined,
+  fours: undefined,
+  fives: undefined,
+  sixes: undefined,
   subtotal: 0,
   bonus: 0,
-  choice: 0,
-  fourOfAKind: 0,
-  fullHouse: 0,
-  smallStraight: 0,
-  largeStraight: 0,
-  yacht: 0,
+  choice: undefined,
+  fourOfAKind: undefined,
+  fullHouse: undefined,
+  smallStraight: undefined,
+  largeStraight: undefined,
+  yacht: undefined,
   total: 0,
 }
 
@@ -65,7 +66,12 @@ export const scoreSlice = createSlice({
   initialState,
   reducers: {
     writeScore: (state, action: PayloadAction<{ cat: TCategoriesWritable; score: number }>) => {
+      console.log(action)
       state.players[state.pIndex][action.payload.cat] = action.payload.score
+      const { subtotal, bonus, total } = computeUnwritableCategories(state.players[state.pIndex])
+      state.players[state.pIndex].subtotal = subtotal
+      state.players[state.pIndex].bonus = bonus
+      state.players[state.pIndex].total = total
       state.pIndex = (state.pIndex + 1) % state.players.length
       state.leftTurns -= Number(state.pIndex === 0)
       state.leftRolls = 3
@@ -79,13 +85,23 @@ export const scoreSlice = createSlice({
     decreaseLeftRolls: (state) => {
       state.leftRolls--
     },
+    initScore: (state) => {
+      state.pIndex = initialState.pIndex
+      state.diceShaking = initialState.diceShaking
+      state.leftRolls = initialState.leftRolls
+      state.leftTurns = initialState.leftTurns
+      state.rollFreezed = initialState.rollFreezed
+      state.players[0] = { ...initialState.players[0] }
+      state.players[1] = { ...initialState.players[1] }
+    },
   },
 })
 
-export const { writeScore, toggleDiceShaking, toggleRollFreezed, decreaseLeftRolls } = scoreSlice.actions
+export const { writeScore, toggleDiceShaking, toggleRollFreezed, decreaseLeftRolls, initScore } = scoreSlice.actions
 
 export const selectRollFreezed = (state: RootState) => state.score.rollFreezed
 export const selectLeftRolls = (state: RootState) => state.score.leftRolls
+export const selectLeftTurns = (state: RootState) => state.score.leftTurns
 export const selectPlayer = (state: RootState) => state.score.players[state.score.pIndex]
 export const selectPlayers = (state: RootState) => state.score.players
 export const selectPIndex = (state: RootState) => state.score.pIndex

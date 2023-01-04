@@ -286,6 +286,10 @@ const _side = {
   ],
 }
 
+export function getRandomInitialTopside(): TMatrix {
+  return _side[1][getRandomIntInclusive(0, _side[1].length - 1)]
+}
+
 export function matrixToTopside(m: TMatrix) {
   if (_side[1].some((m2) => areEqual(m, m2))) return 1
   if (_side[2].some((m2) => areEqual(m, m2))) return 2
@@ -382,23 +386,23 @@ export function getRandomDirectionBatch(n: number): BasicRotationDirection[] {
 export function getRandomLengthDirectionBatch(): BasicRotationDirection[] {
   const result: BasicRotationDirection[] = []
   let s: BasicRotationDirection[] = ['xcw', 'ycw', 'ycw', 'zcw']
-  let count = getRandomIntInclusive(15, 25)
+  let count = getRandomIntInclusive(16, 20)
   if (coinToss()) {
     // do nothing
   } else if (coinToss()) {
     s = ['xccw', 'xccw', 'xccw', 'yccw', 'zccw']
-    count += 5
+    count += 2
   } else if (coinToss()) {
     s = ['ycw', 'ycw', 'ycw', 'ycw', 'zcw']
-    count += 10
+    count += 3
   } else if (coinToss()) {
     s = ['yccw', 'zccw']
-    count += 15
+    count += 5
   }
   if (coinToss()) {
-    count += getRandomIntInclusive(0, 5)
+    count += getRandomIntInclusive(0, 3)
   } else {
-    count -= getRandomIntInclusive(0, 5)
+    count -= getRandomIntInclusive(0, 3)
   }
   while (count) {
     count--

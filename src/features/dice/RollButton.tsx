@@ -1,27 +1,14 @@
 /** @jsxImportSource @emotion/react */
 import { cx } from '@emotion/css'
 import { css } from '@emotion/react'
-import { ReactElement, useEffect, useReducer, useRef, useState } from 'react'
-import { aver, coinToss, getRandomIntInclusive } from '../../common/util'
-import { BasicRotationDirection, TMatrix } from './type'
-import {
-  displayLeftRollsEmoji,
-  getRandomDirection,
-  getRandomDirectionBatch,
-  getRandomLengthDirectionBatch,
-  getRepresentativeMatrix,
-  identityMatrixFourByFour,
-  matrixToTopside,
-  multiplyMatrix,
-  rotatorRandomXyz,
-} from './util'
-import { useScoreStore } from '../score/store'
-import { Dice } from './Dice'
+import { ReactElement, useEffect, useReducer, useRef } from 'react'
+import { coinToss, getRandomIntInclusive } from '../../common/util'
+import { BasicRotationDirection } from './type'
+import { getRandomLengthDirectionBatch } from './util'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import {
   alignUnkeeps,
   rotateBatch,
-  selectDice0,
   selectDiceIdsUnkept,
   selectDiceKeeps,
   selectDices,
@@ -29,35 +16,35 @@ import {
   selectUnkeepDicesByOrder,
   selectUnkeptDiceIdsOrdersTable,
   sortUnkeeps,
-  toggleTilt,
-  toggleTiltByOrder,
+  tiltByOrder,
+  untiltByOrder,
 } from './diceSlice'
 import {
   decreaseLeftRolls,
   selectDiceShaking,
   selectLeftRolls,
+  selectLeftTurns,
   selectRollFreezed,
   toggleDiceShaking,
   toggleRollFreezed,
 } from '../score/scoreSlice'
 import { ZFour } from '../../common/type'
 
+const TICKS = { normal: 70, slow: 150, slower: 320 }
+
 export function RollButton(): ReactElement {
   const keeps = useAppSelector(selectDiceKeeps)
   const dispatch = useAppDispatch()
   const timerRef = useRef<number | null>(null)
-  const timerUntiltRef = useRef<number | null>(null)
   const leftRolls = useAppSelector(selectLeftRolls)
-  const diceShaking = useAppSelector(selectDiceShaking)
   const rollFreezed = useAppSelector(selectRollFreezed)
   const unkeptDiceIdsOrdersTable = useAppSelector(selectUnkeptDiceIdsOrdersTable)
-  const dicesUnkept = useAppSelector(selectDicesUnkept)
-  const dices = useAppSelector(selectDices)
   const diceIdsUnkept = useAppSelector(selectDiceIdsUnkept)
-  const unkeepDicesByOrder = useAppSelector(selectUnkeepDicesByOrder)
-  const [toggleTiltSignal, signalToggleTilt] = useReducer((x) => x + 1, 0)
-  const [toggleTiltSignalSlow, signalToggleTiltSlow] = useReducer((x) => x + 1, 0)
-  const [toggleTiltSignalSlower, signalToggleTiltSlower] = useReducer((x) => x + 1, 0)
+  const leftTurns = useAppSelector(selectLeftTurns)
+  const [tiltSignal, signalTilt] = useReducer(
+    (_: any, { tilt, tick }: { tilt: boolean; tick: number }) => ({ tilt, tick }),
+    { tilt: true, tick: 0 }
+  )
 
   /** Roll the dices */
   const onRoll = () => {
@@ -66,11 +53,14 @@ export function RollButton(): ReactElement {
     dispatch(toggleRollFreezed())
     dispatch(decreaseLeftRolls())
     const numberofDiceUnkept = diceIdsUnkept.size
-    const halfNumberofDiceUnkept = Math.floor(numberofDiceUnkept)
-    const r = getRandomIntInclusive(2, 3)
+    const halfNumberofDiceUnkept = Math.floor(numberofDiceUnkept / 2)
+    const r = getRandomIntInclusive(2, 4) - (leftRolls !== 3 ? getRandomIntInclusive(0, 2) : 0)
     const count = {
       tilt: 1,
-      first: leftRolls === 3 ? Math.floor(((numberofDiceUnkept + 2) / 100) * 200) : numberofDiceUnkept + 3,
+      first:
+        leftRolls === 3
+          ? Math.floor(((numberofDiceUnkept + 2) / 90) * 150)
+          : Math.floor(((numberofDiceUnkept + 3) / 90) * 70),
       diceIndex: 0,
       diceDelayer: false,
       dices: [
@@ -82,25 +72,18 @@ export function RollButton(): ReactElement {
       ],
       second: r + 1 + halfNumberofDiceUnkept,
       sort: 1,
-      third: r,
+      third: 2,
       align: 1,
-      fourth: r,
+      fourth: 2,
       untilt: 1,
-      fifth: r,
+      fifth: 2,
     }
     for (let i = 0; i < 5; i++) {
       if (coinToss() && coinToss() && coinToss() && coinToss() && coinToss() && coinToss()) {
         count.dices[i] = [...count.dices[i], ...count.dices[i]]
       }
     }
-    if (leftRolls === 2) {
-      for (let i = 0; i < 5; i++) {
-        const r = getRandomIntInclusive(3, 5)
-        for (let _ = 0; _ < r; _++) {
-          count.dices[i].pop()
-        }
-      }
-    } else if (leftRolls === 1) {
+    if (leftRolls === 1) {
       for (let i = 0; i < 5; i++) {
         if (count.dices[i].length) {
           const r = getRandomIntInclusive(3, 5)
@@ -110,16 +93,10 @@ export function RollButton(): ReactElement {
         }
       }
     }
-    console.log(count.second, '!!!', aver(count.dices.map(({ length }) => length).filter(Boolean)))
-    // count.second += Math.floor((Math.max(...count.dices.map(({ length }) => length)) - 25) / 4)
-    console.log(count.second, '!!!')
-    // count.third += Math.floor(Math.max(count.dices.length) / 2)
-    // count.fourth += Math.floor(Math.max(count.dices.length) / 3)
-    // count.fifth += Math.floor(Math.max(count.dices.length) / 4)
     const table = unkeptDiceIdsOrdersTable
     timerRef.current = window.setInterval(() => {
       if (count.tilt) {
-        ;(leftRolls === 3 ? signalToggleTiltSlow : signalToggleTilt)()
+        signalTilt({ tilt: true, tick: leftRolls === 3 ? TICKS.slow : TICKS.normal })
         count.tilt--
       } else if (count.first) {
         count.first--
@@ -128,24 +105,9 @@ export function RollButton(): ReactElement {
 
         for (let i = 0; i <= Math.min(count.diceIndex, count.dices.length); i++) {
           if (table.has(i as ZFour) && count.dices[table.get(i as ZFour)!].length) {
-            if (count.dices[table.get(i as ZFour)!].length === 1) {
-              // count.untilt[table.get(i as ZFour)!] = 14
-              // count.untilt[table.get(i as ZFour)!] = 1
-            }
             batch.push([table.get(i as ZFour)!, count.dices[table.get(i as ZFour)!].pop()!])
           }
         }
-        // for (let i = 0; i <= Math.min(count.diceIndex, count.dices.length); i++) {
-        //   if (table.has(i as ZFour) && count.dices[table.get(i as ZFour)!].length) {
-        //     batch.push([table.get(i as ZFour)!, count.dices[table.get(i as ZFour)!].pop()!])
-        //   }
-        // }
-        // Object.keys(count.untilt).forEach((id) => {
-        //   if (count.untilt[id as unknown as ZFour] === 1) {
-        //     dispatch(toggleTilt(Number(id) as ZFour))
-        //   }
-        //   count.untilt[id as unknown as ZFour]--
-        // })
 
         count.diceDelayer = !count.diceDelayer
         if (!count.diceDelayer) {
@@ -156,12 +118,6 @@ export function RollButton(): ReactElement {
         dispatch(rotateBatch(batch))
       } else if (count.second) {
         count.second--
-        // Object.keys(count.untilt).forEach((id) => {
-        //   if (count.untilt[id as unknown as ZFour] === 1) {
-        //     dispatch(toggleTilt(Number(id) as ZFour))
-        //   }
-        //   count.untilt[id as unknown as ZFour]--
-        // })
       } else if (count.sort) {
         dispatch(sortUnkeeps())
         count.sort--
@@ -174,7 +130,7 @@ export function RollButton(): ReactElement {
       } else if (count.fourth) {
         count.fourth--
       } else if (count.untilt) {
-        ;(leftRolls === 1 ? signalToggleTiltSlower : signalToggleTilt)()
+        signalTilt({ tilt: false, tick: leftRolls === 1 ? TICKS.slower : TICKS.normal })
         count.untilt--
       } else if (count.fifth) {
         count.fifth--
@@ -188,29 +144,15 @@ export function RollButton(): ReactElement {
   }
 
   useEffect(() => {
-    let orderIndex: ZFour = 0
-    const t = window.setInterval(() => {
-      dispatch(toggleTiltByOrder(orderIndex))
-      orderIndex++
-      if (orderIndex === 5) clearInterval(t)
-    }, 70)
-  }, [dispatch, toggleTiltSignal])
-  useEffect(() => {
-    let orderIndex: ZFour = 0
-    const t = window.setInterval(() => {
-      dispatch(toggleTiltByOrder(orderIndex))
-      orderIndex++
-      if (orderIndex === 5) clearInterval(t)
-    }, 200)
-  }, [dispatch, toggleTiltSignalSlow])
-  useEffect(() => {
-    let orderIndex: ZFour = 0
-    const t = window.setInterval(() => {
-      dispatch(toggleTiltByOrder(orderIndex))
-      orderIndex++
-      if (orderIndex === 5) clearInterval(t)
-    }, 320)
-  }, [dispatch, toggleTiltSignalSlower])
+    if (tiltSignal.tick !== 0) {
+      let orderIndex: ZFour = 0
+      const t = window.setInterval(() => {
+        dispatch((tiltSignal.tilt ? tiltByOrder : untiltByOrder)(orderIndex))
+        orderIndex++
+        if (orderIndex === 5) clearInterval(t)
+      }, tiltSignal.tick)
+    }
+  }, [dispatch, tiltSignal])
 
   return (
     <>
@@ -218,10 +160,10 @@ export function RollButton(): ReactElement {
         css={CSS.roll}
         className={cx({
           leftZeroRolls: !leftRolls || keeps.every(Boolean),
-          bouncing: leftRolls === 3,
+          bouncing: leftRolls === 3 && leftTurns > 0,
         })}
-        onClick={onRoll}
-        disabled={rollFreezed || leftRolls === 0}
+        onMouseDown={onRoll}
+        disabled={rollFreezed || leftRolls === 0 || leftTurns <= 0}
       >
         Roll the dices!
       </button>

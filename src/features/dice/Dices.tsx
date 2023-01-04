@@ -1,49 +1,13 @@
 /** @jsxImportSource @emotion/react */
-import { cx } from '@emotion/css'
 import { css } from '@emotion/react'
-import { ReactElement, useEffect, useReducer, useState } from 'react'
-import { getRandomIntInclusive } from '../../common/util'
-import { TMatrix } from './type'
-import {
-  displayLeftRollsEmoji,
-  getRepresentativeMatrix,
-  identityMatrixFourByFour,
-  matrixToTopside,
-  multiplyMatrix,
-  rotatorRandomXyz,
-} from './util'
-import { useScoreStore } from '../score/store'
+import { ReactElement } from 'react'
+import { displayLeftRollsEmoji } from './util'
 import { Dice } from './Dice'
 import { RollButton } from './RollButton'
 import { useAppSelector } from '../../app/hooks'
 import { selectLeftRolls } from '../score/scoreSlice'
 
-interface DiceInfo {
-  id: number
-  accumMatrix: TMatrix
-  matricesPerTerm: TMatrix[]
-  order: number
-  kept: boolean
-  topside: number
-  keptOrder: number
-  representativeMatrix?: TMatrix
-}
-
 /** The initial dice info list value for a `useState` */
-const INITIAL_DICE_INFO_LIST: DiceInfo[] = Array(6)
-  .fill(0)
-  .map(
-    (_, i): DiceInfo => ({
-      id: i,
-      accumMatrix: identityMatrixFourByFour,
-      matricesPerTerm: [identityMatrixFourByFour],
-      order: i,
-      kept: false,
-      topside: 1,
-      keptOrder: 1,
-    })
-  )
-  .slice(1)
 
 export function Dices(): ReactElement {
   return (
@@ -130,7 +94,7 @@ const CSS = {
     right: 0;
     font-weight: 700;
     color: #222;
-    font-size: 140%;
+    font-size: calc(0.25 * min(16vw, 9vh));
     &.head {
       opacity: 0.8;
     }

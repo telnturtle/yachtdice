@@ -4,6 +4,7 @@ import { ZFour } from '../../common/type'
 import { BasicRotationDirection, TMatrix } from './type'
 import {
   changeToRepresentativeMatrix,
+  getRandomInitialTopside,
   getRepresentativeMatrix,
   identityMatrixFourByFour,
   matrixToTopside,
@@ -102,9 +103,24 @@ export const diceSlice = createSlice({
     toggleTilt: (state, action: PayloadAction<ZFour>) => {
       state.dices[action.payload].tilt = !state.dices[action.payload].tilt
     },
+    tiltByOrder: (state, action: PayloadAction<ZFour>) => {
+      const d = state.dices.find((dice) => dice.order === action.payload && !dice.keep)
+      if (d) d.tilt = d.keep ? false : true
+    },
+    untiltByOrder: (state, action: PayloadAction<ZFour>) => {
+      const d = state.dices.find((dice) => dice.order === action.payload && !dice.keep)
+      if (d) d.tilt = d.keep ? false : false
+    },
     toggleTiltByOrder: (state, action: PayloadAction<ZFour>) => {
       const d = state.dices.find((dice) => dice.order === action.payload && !dice.keep)
       if (d) d.tilt = d.keep ? false : !d.tilt
+    },
+    initDices: (state) => {
+      state.dices[0] = { ...initialState.dices[0], matrix: getRandomInitialTopside() }
+      state.dices[1] = { ...initialState.dices[1], matrix: getRandomInitialTopside() }
+      state.dices[2] = { ...initialState.dices[2], matrix: getRandomInitialTopside() }
+      state.dices[3] = { ...initialState.dices[3], matrix: getRandomInitialTopside() }
+      state.dices[4] = { ...initialState.dices[4], matrix: getRandomInitialTopside() }
     },
   },
 })
@@ -122,7 +138,10 @@ export const {
   alignUnkeeps,
   rotateBatch,
   toggleTilt,
+  tiltByOrder,
+  untiltByOrder,
   toggleTiltByOrder,
+  initDices,
 } = diceSlice.actions
 
 export const selectDices = (state: RootState) => state.dice.dices
