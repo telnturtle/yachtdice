@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
-import { Board } from './components/Board'
+import { Board } from './features/score/Board'
 
 function App() {
   return (

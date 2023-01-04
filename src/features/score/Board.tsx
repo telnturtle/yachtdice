@@ -1,12 +1,13 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
-import { useScoreStore } from '../modules/score/store'
-import { DiceKeep } from './DiceKeep'
-import { Dices } from './Dices'
+import { DiceKeep } from '../dice/DiceKeep'
+import { Dices } from '../dice/Dices'
 import { ScoreBoard } from './ScoreBoard'
+import { Message } from '../message/Message'
+import { GameStatus } from '../game/GameStatus'
+import { RegameButton } from '../game/RegameButton'
 
 export function Board() {
-  const [nowPlayer, rounds] = useScoreStore((s) => [s.nowPlayer, s.rounds])
   return (
     <section
       css={css`
@@ -18,8 +19,12 @@ export function Board() {
       `}
     >
       <ScoreBoard />
+      <Message />
+      <GameStatus />
+      <RegameButton />
       <DiceKeep />
-      <Dices key={`${nowPlayer}-${rounds}`} />
+      <Dices />
+      {/* <Dices key={`${nowPlayer}-${rounds}`} /> */}
     </section>
   )
 }

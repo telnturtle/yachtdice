@@ -33,3 +33,16 @@ const CATEGORIES = {
 } as const
 
 export type TCategories = typeof CATEGORIES[keyof typeof CATEGORIES]
+export type TCategoriesWritable =
+  | 'aces'
+  | 'deuces'
+  | 'threes'
+  | 'fours'
+  | 'fives'
+  | 'sixes'
+  | 'choice'
+  | 'fourOfAKind'
+  | 'fullHouse'
+  | 'smallStraight'
+  | 'largeStraight'
+  | 'yacht'
