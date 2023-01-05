@@ -28,6 +28,12 @@ export function ScoreBoard(): ReactElement {
   const computed = leftRolls === 3 ? undefined : computeTopsides(topsides)
   const dispatch = useAppDispatch()
   const onClick = (cat: TCategoriesWritable) => {
+    // 선택불가카테고리가 아닐 시 그리고
+    // 이미 선택된 카테고리가 아닐 시 그리고
+    // 한번도 안굴렸지 않았을 시 그리고
+    // 굴리는 중이 아닐 시
+    // 선택된 점수 작성 (플레이어 턴 넘어감) 및 주사위 초기화
+
     console.log({ cat })
     if (UNWRITABLE_CATEGORIES.has(cat)) return
     if (player[cat] !== undefined) return
@@ -36,18 +42,21 @@ export function ScoreBoard(): ReactElement {
     dispatch(writeScore({ cat, score: computed[cat] }))
     dispatch(initDices())
   }
+
+  const scoreTrProps = { onClick, player, players, pIndex, diceShaking, computed, leftRolls }
+
   return (
     <div css={CSS.root}>
       <table css={CSS.table_abs}>
         <tbody>
           <tr css={CSS.tr}>
-            <td css={[CSS.td, CSS.th]} className={cx({ td_nowplayer: pIndex === 0 })}>
+            <td css={[CSS.td, CSS.th]} className={cx('td_player_name', { td_nowplayer: pIndex === 0 })}>
               {players[0].name}
             </td>
             <td css={[CSS.td, CSS.td_turns]}>Turns</td>
           </tr>
           <tr css={CSS.tr}>
-            <td css={[CSS.td, CSS.th]} className={cx({ td_nowplayer: pIndex === 1 })}>
+            <td css={[CSS.td, CSS.th]} className={cx('td_player_name', { td_nowplayer: pIndex === 1 })}>
               {players[1].name}
             </td>
             <td css={[CSS.td, CSS.td_turns]}>{`${Math.min(12, 12 - leftTurns + 1)}/12`}</td>
@@ -56,32 +65,12 @@ export function ScoreBoard(): ReactElement {
       </table>
       <table css={CSS.table}>
         <tbody>
-          <ScoreTr {...{ onClick, player, players, pIndex, diceShaking, computed, leftRolls }} name="Aces" cat="aces" />
-          <ScoreTr
-            {...{ onClick, player, players, pIndex, diceShaking, computed, leftRolls }}
-            name="Deuces"
-            cat="deuces"
-          />
-          <ScoreTr
-            {...{ onClick, player, players, pIndex, diceShaking, computed, leftRolls }}
-            name="Threes"
-            cat="threes"
-          />
-          <ScoreTr
-            {...{ onClick, player, players, pIndex, diceShaking, computed, leftRolls }}
-            name="Fours"
-            cat="fours"
-          />
-          <ScoreTr
-            {...{ onClick, player, players, pIndex, diceShaking, computed, leftRolls }}
-            name="Fives"
-            cat="fives"
-          />
-          <ScoreTr
-            {...{ onClick, player, players, pIndex, diceShaking, computed, leftRolls }}
-            name="Sixes"
-            cat="sixes"
-          />
+          <ScoreTr {...scoreTrProps} name="Aces" cat="aces" />
+          <ScoreTr {...scoreTrProps} name="Deuces" cat="deuces" />
+          <ScoreTr {...scoreTrProps} name="Threes" cat="threes" />
+          <ScoreTr {...scoreTrProps} name="Fours" cat="fours" />
+          <ScoreTr {...scoreTrProps} name="Fives" cat="fives" />
+          <ScoreTr {...scoreTrProps} name="Sixes" cat="sixes" />
           <tr css={CSS.tr} className="subtotal">
             <th scope="row" css={[CSS.td, CSS.th]} className="non_writable">
               Subtotal
@@ -89,20 +78,8 @@ export function ScoreBoard(): ReactElement {
             {players.map((p) => {
               return (
                 <td css={CSS.td} className={cx({})} key={p.index}>
-                  <span
-                    css={css`
-                      font-size: 90%;
-                    `}
-                  >
-                    {p.subtotal}
-                  </span>
-                  <span
-                    css={css`
-                      font-size: 60%;
-                    `}
-                  >
-                    /63
-                  </span>
+                  <span css={CSS.subtotal_1}>{p.subtotal}</span>
+                  <span css={CSS.subtotal_2}>/63</span>
                 </td>
               )
             })}
@@ -119,37 +96,12 @@ export function ScoreBoard(): ReactElement {
               )
             })}
           </tr>
-          <ScoreTr
-            {...{ onClick, player, players, pIndex, diceShaking, computed, leftRolls }}
-            name="Choice"
-            cat="choice"
-          />
-          <ScoreTr
-            {...{ onClick, player, players, pIndex, diceShaking, computed, leftRolls }}
-            name="Four of a Kind"
-            cat="fourOfAKind"
-            foak
-          />
-          <ScoreTr
-            {...{ onClick, player, players, pIndex, diceShaking, computed, leftRolls }}
-            name="Full House"
-            cat="fullHouse"
-          />
-          <ScoreTr
-            {...{ onClick, player, players, pIndex, diceShaking, computed, leftRolls }}
-            name="S. Straight"
-            cat="smallStraight"
-          />
-          <ScoreTr
-            {...{ onClick, player, players, pIndex, diceShaking, computed, leftRolls }}
-            name="L. Straight"
-            cat="largeStraight"
-          />
-          <ScoreTr
-            {...{ onClick, player, players, pIndex, diceShaking, computed, leftRolls }}
-            name="Yacht"
-            cat="yacht"
-          />
+          <ScoreTr {...scoreTrProps} name="Choice" cat="choice" />
+          <ScoreTr {...scoreTrProps} name="Four of a Kind" cat="fourOfAKind" foak />
+          <ScoreTr {...scoreTrProps} name="Full House" cat="fullHouse" />
+          <ScoreTr {...scoreTrProps} name="S. Straight" cat="smallStraight" />
+          <ScoreTr {...scoreTrProps} name="L. Straight" cat="largeStraight" />
+          <ScoreTr {...scoreTrProps} name="Yacht" cat="yacht" />
           <tr css={CSS.tr} className="total">
             <th scope="row" css={[CSS.td, CSS.th]} className="non_writable total">
               Total
@@ -160,24 +112,6 @@ export function ScoreBoard(): ReactElement {
           </tr>
         </tbody>
       </table>
-
-      {/* <div css={CSS.border}>
-        <ScoreItem {...commonProps} label="Aces" name={'aces'} />
-        <ScoreItem {...commonProps} label="Deuces" name={'deuces'} />
-        <ScoreItem {...commonProps} label="Threes" name={'threes'} />
-        <ScoreItem {...commonProps} label="Fours" name={'fours'} />
-        <ScoreItem {...commonProps} label="Fives" name={'fives'} />
-        <ScoreItem {...commonProps} label="Sixes" name={'sixes'} />
-        <ScoreItem {...commonProps} onClick={undefined} label="Subtotal" name={'subtotal'} />
-        <ScoreItem {...commonProps} onClick={undefined} label="Bonus" name={'bonus'} />
-        <ScoreItem {...commonProps} label="Choice" name={'choice'} />
-        <ScoreItem {...commonProps} label="Four of a Kind" name={'fourOfAKind'} />
-        <ScoreItem {...commonProps} label="Full House" name={'fullHouse'} />
-        <ScoreItem {...commonProps} label="S. Straight" name={'smallStraight'} />
-        <ScoreItem {...commonProps} label="L. Straight" name={'largeStraight'} />
-        <ScoreItem {...commonProps} label="Yacht" name={'yacht'} />
-        <ScoreItem {...commonProps} onClick={undefined} label="Total" name={'total'} />
-      </div> */}
     </div>
   )
 }
@@ -208,29 +142,32 @@ function ScoreTr({
   foak,
 }: ScoreTrProps): ReactElement {
   return (
-    <tr css={CSS.tr} onClick={() => onClick(cat)} className={cx({})}>
+    <tr
+      css={CSS.tr}
+      onClick={() => onClick(cat)}
+      className={cx({ writable_now: player[cat] === undefined && computed?.[cat] !== undefined && !diceShaking })}
+    >
       <th
         scope="row"
         css={[CSS.td, CSS.th]}
         className={cx({
-          writable_now: player[cat] === undefined && computed?.[cat] !== undefined && !diceShaking,
           foak: foak,
         })}
       >
         {name}
       </th>
       {players.map((p) => {
+        const text = p[cat] !== undefined ? p[cat] : pIndex === p.index && !diceShaking ? computed?.[cat] : undefined
         return (
           <td
-            css={CSS.td}
+            css={[CSS.td, CSS.td_score]}
             className={cx({
               td_nowplayer: pIndex === p.index,
               td_auto: p[cat] === undefined,
-              writable_now: pIndex !== p.index && player[cat] === undefined && leftRolls !== 3 && !diceShaking,
               td_writed: p[cat] !== undefined,
             })}
           >
-            {p[cat] !== undefined ? p[cat] : pIndex === p.index && !diceShaking ? computed?.[cat] : undefined}
+            <span className={cx({ score: p[cat] !== undefined })}>{text}</span>
           </td>
         )
       })}
@@ -261,6 +198,7 @@ const CSS = {
   `,
   table: css`
     border-collapse: collapse;
+    max-width: calc(min(16vw, 9vh) * 6.225);
   `,
   tr: css`
     height: calc(min(16vw, 9vh) * 0.55);
@@ -274,17 +212,25 @@ const CSS = {
       /* background-color: rgba(0, 102, 231, 23%); */
     }
     &.writable_now {
-      animation: 4s ease-in-out emphasize-writable infinite;
+      animation: 1.5s ease-in emphasize-writable infinite alternate;
     }
     @keyframes emphasize-writable {
       from {
-        background-color: none;
-      }
-      50% {
         background-color: rgba(212, 7, 15, 15%);
       }
       to {
-        background-color: none;
+        background-color: rgba(212, 7, 15, 5%);
+      }
+    }
+    & .td_auto {
+      animation: 1.5s ease-in emphasize-writable-td_auto infinite alternate;
+    }
+    @keyframes emphasize-writable-td_auto {
+      from {
+        color: rgba(0, 0, 0, 0.6);
+      }
+      to {
+        color: rgba(0, 0, 0, 0.1);
       }
     }
   `,
@@ -298,20 +244,6 @@ const CSS = {
     &.non_writable {
       font-weight: 300;
     }
-    &.writable_now {
-      animation: 4s ease-in-out emphasize-writable infinite;
-    }
-    @keyframes emphasize-writable {
-      from {
-        background-color: none;
-      }
-      50% {
-        background-color: rgba(212, 7, 15, 15%);
-      }
-      to {
-        background-color: none;
-      }
-    }
     &.foak {
       letter-spacing: calc(min(16vw, 9vh) * -0.02);
       word-spacing: calc(min(16vw, 9vh) * -0.04);
@@ -320,7 +252,7 @@ const CSS = {
   `,
   td: css`
     border: 1px solid #000;
-    width: calc(min(16vw, 9vh) * 0.5);
+    width: calc(min(16vw, 9vh) * 0.65);
     text-align: center;
     font-weight: 200;
     box-sizing: border-box;
@@ -330,7 +262,7 @@ const CSS = {
     }
     &.td_auto {
       font-weight: 100;
-      color: rgba(0, 0, 0, 0.6);
+      /* color: rgba(0, 0, 0, 0.6); */
     }
     &.td_notext {
       visibility: hidden;
@@ -338,26 +270,36 @@ const CSS = {
     &.total {
       /* background-color: rgba(0, 102, 231, 25%); */
     }
-    &.writable_now {
-      animation: 4s ease-in-out emphasize-writable infinite;
-    }
-    @keyframes emphasize-writable {
-      from {
-        background-color: none;
-      }
-      50% {
-        background-color: rgba(212, 7, 15, 15%);
-      }
-      to {
-        background-color: none;
-      }
-    }
     &.td_writed.td_writed {
       font-weight: 700;
     }
+    &.td_player_name {
+      font-weight: 100;
+    }
+    &.td_nowplayer.td_player_name {
+      font-weight: 700;
+      background: rgba(212, 7, 15, 0.15);
+    }
+    & .score {
+      display: inline-block;
+      animation: 0.1s ease-in fill_score_out;
+      @keyframes fill_score_out {
+        from {
+          transform: scale(5);
+          opacity: 0.25;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+    }
+  `,
+  td_score: css`
+    max-width: calc(min(16vw, 9vh) * 0.65);
   `,
   td_turns: css`
-    font-weight: 400;
+    font-weight: 200;
     white-space: nowrap;
     padding: 0px calc(min(16vw, 9vh) * 0.1);
   `,
@@ -375,5 +317,11 @@ const CSS = {
     width: calc(100% - 5px);
     display: flex;
     flex-flow: row wrap;
+  `,
+  subtotal_1: css`
+    font-size: 90%;
+  `,
+  subtotal_2: css`
+    font-size: 60%;
   `,
 }

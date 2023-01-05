@@ -190,9 +190,9 @@ const CSS = {
     text-align: center;
     text-transform: uppercase;
     display: block;
-    color: #f0f0f0;
-    font-weight: 900;
-    font-size: larger;
+    color: #fafafa;
+    font-size: calc(min(16vw, 9vh) * 0.36);
+    font-family: 'Arial Black', Gadget, sans-serif;
     width: calc(2 * min(16vw, 9vh));
     height: calc(3 * min(16vw, 9vh));
     opacity: 0.9;
@@ -201,17 +201,14 @@ const CSS = {
       opacity: 20%;
     }
     &.bouncing {
-      animation: 1.5s ease-in-out bouncing infinite;
+      animation: 0.75s ease-in-out bouncing infinite alternate;
     }
     @keyframes bouncing {
       from {
         transform: scale(1);
       }
-      50% {
-        transform: scale(108%);
-      }
       to {
-        transform: scale(1);
+        transform: scale(108%);
       }
     }
     &.leftzerorolls {

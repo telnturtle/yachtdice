@@ -39,27 +39,35 @@ export const diceSlice = createSlice({
   name: 'dice',
   initialState,
   reducers: {
+    /** X축 시계방향 회전 */
     rotateXCW: (state, action: PayloadAction<ZFour>) => {
       state.dices[action.payload].matrix = multiplyMatrix(state.dices[action.payload].matrix, rotatorMatrices.xcw)
     },
+    /** X축 반시계방향 회전 */
     rotateXCCW: (state, action: PayloadAction<ZFour>) => {
       state.dices[action.payload].matrix = multiplyMatrix(state.dices[action.payload].matrix, rotatorMatrices.xccw)
     },
+    /** Y축 시계방향 회전 */
     rotateYCW: (state, action: PayloadAction<ZFour>) => {
       state.dices[action.payload].matrix = multiplyMatrix(state.dices[action.payload].matrix, rotatorMatrices.ycw)
     },
+    /** Y축 반시계방향 회전 */
     rotateYCCW: (state, action: PayloadAction<ZFour>) => {
       state.dices[action.payload].matrix = multiplyMatrix(state.dices[action.payload].matrix, rotatorMatrices.yccw)
     },
+    /** Z축 시계방향 회전 */
     rotateZCW: (state, action: PayloadAction<ZFour>) => {
       state.dices[action.payload].matrix = multiplyMatrix(state.dices[action.payload].matrix, rotatorMatrices.zcw)
     },
+    /** Z축 반시계방향 회전 */
     rotateZCCW: (state, action: PayloadAction<ZFour>) => {
       state.dices[action.payload].matrix = multiplyMatrix(state.dices[action.payload].matrix, rotatorMatrices.zccw)
     },
+    /** 행렬 갱신 */
     changeMatrix: (state, action: PayloadAction<{ matrix: TMatrix; id: ZFour }>) => {
       state.dices[action.payload.id].matrix = action.payload.matrix
     },
+    /** 킵되지 않은 주사위를 정렬 */
     sortUnkeeps: (state) => {
       state.dices.forEach((d) => {
         d.topside = matrixToTopside(d.matrix) ?? 1
@@ -70,6 +78,8 @@ export const diceSlice = createSlice({
         state.dices[d.id].order = array.pop() ?? 0
       })
     },
+    /** 킵 여부 토글
+     * 변경되는 순서에서 가장 상위 위치를 선택 */
     toggleKeep: (state, action: PayloadAction<ZFour>) => {
       const orders = {
         kept: new Set(),
@@ -87,6 +97,7 @@ export const diceSlice = createSlice({
         state.dices[id].order = Math.min(...[0, 1, 2, 3, 4].filter((__) => !orders.unkept.has(__))) as ZFour
       }
     },
+    /** 킵되지 않은 주사위들을 회전시켜 모양을 정렬 */
     alignUnkeeps: (state) => {
       const unkeeps = state.dices.filter((d) => !d.keep).map((d) => d.id)
       unkeeps.forEach((id) => {
@@ -94,26 +105,32 @@ export const diceSlice = createSlice({
         theDice.matrix = changeToRepresentativeMatrix(theDice.matrix)
       })
     },
+    /** 주사위 여러개를 한번에 회전 */
     rotateBatch: (state, action: PayloadAction<[ZFour, BasicRotationDirection][]>) => {
       action.payload.forEach(([id, dir]) => {
         state.dices[id].matrix = multiplyMatrix(state.dices[id].matrix, rotatorMatrices[dir])
       })
     },
+    /** 기울임 토글 */
     toggleTilt: (state, action: PayloadAction<ZFour>) => {
       state.dices[action.payload].tilt = !state.dices[action.payload].tilt
     },
+    /** 킵되지 않은 주사위의 순서번째를 기울임 */
     tiltByOrder: (state, action: PayloadAction<ZFour>) => {
       const d = state.dices.find((dice) => dice.order === action.payload && !dice.keep)
       if (d) d.tilt = d.keep ? false : true
     },
+    /** 킵되지 않은 주사위의 순서번째를 기울임해제 */
     untiltByOrder: (state, action: PayloadAction<ZFour>) => {
       const d = state.dices.find((dice) => dice.order === action.payload && !dice.keep)
       if (d) d.tilt = d.keep ? false : false
     },
+    /** 킵되지 않은 주사위의 순서번째를 기울임 토글 */
     toggleTiltByOrder: (state, action: PayloadAction<ZFour>) => {
       const d = state.dices.find((dice) => dice.order === action.payload && !dice.keep)
       if (d) d.tilt = d.keep ? false : !d.tilt
     },
+    /** 주사위 초기화 */
     initDices: (state) => {
       state.dices[0] = { ...initialState.dices[0], matrix: getRandomInitialTopside() }
       state.dices[1] = { ...initialState.dices[1], matrix: getRandomInitialTopside() }

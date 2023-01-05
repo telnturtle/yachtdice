@@ -6,7 +6,7 @@ export interface MessageState {
 }
 
 const initialState: MessageState = {
-  messages: [],
+  messages: ['Yacht Dice'],
 }
 
 export const messageSlice = createSlice({

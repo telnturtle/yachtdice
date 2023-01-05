@@ -20,28 +20,39 @@ export function Message() {
         z-index: 11;
         bottom: calc(min(16vw, 9vh) * 0.25);
         bottom: 0;
-        padding: 0 0 calc(min(16vw, 9vh) * 0.125) calc(min(16vw, 9vh) * 0.125);
-        font-size: calc(min(16vw, 9vh) * 0.5);
+        width: 100%;
+        height: 100%;
         max-width: calc(min(16vw, 9vh) * 9);
         min-width: calc(min(16vw, 9vh) * 1);
-        text-shadow: 0 0 calc(min(16vw, 9vh) * 0.1) rgba(0, 102, 231, 80%);
-        color: rgba(0, 102, 231, 75%);
+        display: flex;
+        flex-flow: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-size: calc(min(16vw, 9vh) * 0.5);
+        font-weight: 900;
+        text-shadow: rgba(0, 102, 231, 90%) 0 0 calc(min(16vw, 9vh) * 0.2);
+        color: rgba(0, 102, 231, 80%);
         transform: scale(0);
         transform-origin: calc(min(16vw, 9vh) * 3) 50%;
         transform-origin: 50% 50%;
-        animation: 10s linear bbam;
-        @keyframes bbam {
+        animation: 10s ease-in fill_score_out_disappear;
+        @keyframes fill_score_out_disappear {
           from {
-            transform: scale(0);
+            transform: scale(2.55);
+            opacity: 0.25;
           }
-          5% {
+          2% {
             transform: scale(1);
+            opacity: 1;
           }
-          50% {
+          22% {
             transform: scale(1);
+            opacity: 1;
           }
-          to {
+          24% {
             transform: scale(0);
+            opacity: 0;
           }
         }
         pointer-events: none;
