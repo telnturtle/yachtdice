@@ -98,5 +98,6 @@ const CSS = {
     &.head {
       opacity: 0.8;
     }
+    pointer-events: none;
   `,
 }
