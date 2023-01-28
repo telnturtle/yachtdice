@@ -1,15 +1,12 @@
 {
   "files": {
-    "main.css": "/yachtdice/static/css/main.d4d2c791.css",
-    "main.js": "/yachtdice/static/js/main.0db3ffbc.js",
-    "static/js/787.0dab8f9a.chunk.js": "/yachtdice/static/js/787.0dab8f9a.chunk.js",
-    "index.html": "/yachtdice/index.html",
-    "main.d4d2c791.css.map": "/yachtdice/static/css/main.d4d2c791.css.map",
-    "main.0db3ffbc.js.map": "/yachtdice/static/js/main.0db3ffbc.js.map",
-    "787.0dab8f9a.chunk.js.map": "/yachtdice/static/js/787.0dab8f9a.chunk.js.map"
+    "main.css": "/yachtdice/static/css/main.82c43bff.css",
+    "main.js": "/yachtdice/static/js/main.29f603cc.js",
+    "static/js/27.95381d15.chunk.js": "/yachtdice/static/js/27.95381d15.chunk.js",
+    "index.html": "/yachtdice/index.html"
   },
   "entrypoints": [
-    "static/css/main.d4d2c791.css",
-    "static/js/main.0db3ffbc.js"
+    "static/css/main.82c43bff.css",
+    "static/js/main.29f603cc.js"
   ]
 }
