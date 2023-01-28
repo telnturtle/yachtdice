@@ -7,6 +7,11 @@ export interface MessageState {
 
 const initialState: MessageState = {
   messages: ['Yacht Dice'],
+//   ['Yacht Dice',
+// 'Large Straight',
+// 'Small Straight',
+// 'Full House',
+// 'Four of a Kind',]
 }
 
 export const messageSlice = createSlice({

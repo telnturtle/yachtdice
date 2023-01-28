@@ -190,6 +190,7 @@ const CSS = {
     margin-top: auto;
     margin-bottom: auto;
     width: calc(min(16vw, 9vh) * 7);
+    padding-top: calc(min(16vw, 9vh) * 1.125);
   `,
   table_abs: css`
     border-collapse: collapse;
@@ -201,8 +202,8 @@ const CSS = {
     max-width: calc(min(16vw, 9vh) * 6.225);
   `,
   tr: css`
-    height: calc(min(16vw, 9vh) * 0.55);
-    font-size: calc(min(16vw, 9vh) * 0.35);
+    height: calc(min(16vw, 9vh) * 0.625);
+    font-size: calc(min(16vw, 9vh) * 0.375);
     &.subtotal {
       height: calc(min(16vw, 9vh) * 0.45);
       /* background-color: rgba(0, 102, 231, 10%); */
@@ -245,8 +246,8 @@ const CSS = {
       font-weight: 300;
     }
     &.foak {
-      letter-spacing: calc(min(16vw, 9vh) * -0.02);
-      word-spacing: calc(min(16vw, 9vh) * -0.04);
+      letter-spacing: calc(min(16vw, 9vh) * -0.01);
+      word-spacing: calc(min(16vw, 9vh) * -0.02);
       font-size: calc(min(16vw, 9vh) * 0.32);
     }
   `,
@@ -274,10 +275,10 @@ const CSS = {
       font-weight: 700;
     }
     &.td_player_name {
-      font-weight: 100;
+      font-weight: 200;
     }
     &.td_nowplayer.td_player_name {
-      font-weight: 700;
+      font-weight: 800;
       background: rgba(212, 7, 15, 0.15);
     }
     & .score {

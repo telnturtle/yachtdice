@@ -29,7 +29,7 @@ export function Message() {
         align-items: center;
         justify-content: center;
         text-align: center;
-        font-size: calc(min(16vw, 9vh) * 0.5);
+        font-size: calc(min(16vw, 9vh) * 0.75);
         font-weight: 900;
         text-shadow: rgba(0, 102, 231, 90%) 0 0 calc(min(16vw, 9vh) * 0.2);
         color: rgba(0, 102, 231, 80%);

@@ -64,13 +64,11 @@ const announceCss = css`
   align-items: center;
   justify-content: center;
   color: #fff;
-  font-family: 'Arial Black', Gadget, sans-serif;
   text-align: center;
 `
 
 const buttonCss = css`
   margin: calc(0.25 * min(16vw, 9vh));
-  font-family: 'Arial Black', Gadget, sans-serif;
   font-size: calc(0.5 * min(16vw, 9vh));
   padding: calc(0.375 * min(16vw, 9vh));
   text-align: center;
