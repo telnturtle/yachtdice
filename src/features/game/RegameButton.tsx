@@ -57,7 +57,7 @@ const backdropCss = css`
 `
 
 const announceCss = css`
-  font-size: calc(0.5 * min(16vw, 9vh));
+  font-size: 0.5rem;
   width: 100%;
   height: 100%;
   display: flex;
@@ -68,25 +68,25 @@ const announceCss = css`
 `
 
 const buttonCss = css`
-  margin: calc(0.25 * min(16vw, 9vh));
-  font-size: calc(0.5 * min(16vw, 9vh));
-  padding: calc(0.375 * min(16vw, 9vh));
+  margin: 0.25rem;
+  font-size: 0.5rem;
+  padding: 0.375rem;
   text-align: center;
   text-transform: uppercase;
   transition: 0.5s;
   background-size: 200% auto;
   color: #fff;
   border-radius: 10px;
-  box-shadow: 0 0 calc(0.25 * min(16vw, 9vh)) #eee;
-  width: calc(5 * min(16vw, 9vh));
+  box-shadow: 0 0 0.25rem #eee;
+  width: 5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   cursor: pointer;
   display: inline-block;
-  border-radius: calc(0.3 * min(16vw, 9vh));
+  border-radius: 0.3rem;
   position: absolute;
-  top: calc(0.25 * min(16vw, 9vh));
-  right: calc(0.25 * min(16vw, 9vh));
+  top: 0.25rem;
+  right: 0.25rem;
   background-image: linear-gradient(to right, #dd5e89 0%, #f7bb97 51%, #dd5e89 100%);
   :hover {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);

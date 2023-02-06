@@ -191,10 +191,10 @@ const CSS = {
     text-transform: uppercase;
     display: block;
     color: #fafafa;
-    font-size: calc(min(16vw, 9vh) * 0.375);
-    word-spacing: calc(min(16vw, 9vh) * 1);
-    width: calc(2 * min(16vw, 9vh));
-    height: calc(3 * min(16vw, 9vh));
+    font-size: 0.375rem;
+    word-spacing: 1rem;
+    width: 2rem;
+    height: 3rem;
     opacity: 0.9;
     border: none;
     &:disabled {

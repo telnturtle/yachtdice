@@ -49,13 +49,13 @@ const CSS = {
   `,
   rollLeft: css`
     position: absolute;
-    bottom: calc(3.375 * min(16vw, 9vh));
-    width: calc(2 * min(16vw, 9vh));
+    bottom: 3.375rem;
+    width: 2rem;
     text-align: center;
     right: 0;
     font-weight: 700;
     color: #222;
-    font-size: calc(0.25 * min(16vw, 9vh));
+    font-size: 0.25rem;
     &.head {
       opacity: 0.8;
     }

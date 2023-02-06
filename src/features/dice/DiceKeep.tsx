@@ -9,11 +9,11 @@ const rootCss = css`
 `
 
 const dicekeepCss = css`
-  height: calc(5.5 * min(16vw, 9vh));
+  height: 5.5rem;
   position: absolute;
-  width: calc(0.95 * min(16vw, 9vh));
-  top: calc(1.6 * min(16vw, 9vh));
-  right: calc(1.5 * min(16vw, 9vh));
+  width: 0.95rem;
+  top: 1.55rem;
+  right: 1.5rem;
   /* background-image: linear-gradient( 95.2deg, rgba(173,252,234,1) 26.8%, rgba(192,229,246,1) 64% );    */
   background-color: #e8c99b;
   background-image: linear-gradient(315deg, #e8c99b 0%, #e8bc85 74%);
@@ -28,7 +28,7 @@ const dicekeepCss = css`
 `
 
 const textCss = css`
-  font-size: calc(0.7 * min(16vw, 9vh));
+  font-size: 0.7rem;
   font-weight: 900;
   color: rgba(0, 0, 0, 0.2);
   user-select: none;

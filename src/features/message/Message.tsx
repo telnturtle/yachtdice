@@ -18,23 +18,23 @@ export function Message() {
       css={css`
         position: absolute;
         z-index: 11;
-        bottom: calc(min(16vw, 9vh) * 0.25);
+        bottom: 0.25rem;
         bottom: 0;
         width: 100%;
         height: 100%;
-        max-width: calc(min(16vw, 9vh) * 9);
-        min-width: calc(min(16vw, 9vh) * 1);
+        max-width: 9rem;
+        min-width: 1rem;
         display: flex;
         flex-flow: column;
         align-items: center;
         justify-content: center;
         text-align: center;
-        font-size: calc(min(16vw, 9vh) * 0.75);
+        font-size: 0.75rem;
         font-weight: 900;
-        text-shadow: rgba(0, 102, 231, 90%) 0 0 calc(min(16vw, 9vh) * 0.2);
+        text-shadow: rgba(0, 102, 231, 90%) 0 0 0.2rem;
         color: rgba(0, 102, 231, 80%);
         transform: scale(0);
-        transform-origin: calc(min(16vw, 9vh) * 3) 50%;
+        transform-origin: 3rem 50%;
         transform-origin: 50% 50%;
         animation: 10s ease-in fill_score_out_disappear;
         @keyframes fill_score_out_disappear {

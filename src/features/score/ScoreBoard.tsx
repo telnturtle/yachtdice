@@ -207,26 +207,26 @@ const CSS = {
   root: css`
     margin-top: auto;
     margin-bottom: auto;
-    width: calc(min(16vw, 9vh) * 7);
-    padding-top: calc(min(16vw, 9vh) * 1.125);
+    width: 7rem;
+    padding-top: 1.125rem;
   `,
   table_abs: css`
     border-collapse: collapse;
     position: absolute;
-    top: calc(min(16vw, 9vh) * 0.2);
-    left: calc(min(16vw, 9vh) * 0.1);
+    top: 0.2rem;
+    left: 0.1rem;
   `,
   table: css`
     border-collapse: collapse;
-    max-width: calc(min(16vw, 9vh) * 6.225);
-    margin-left: calc(min(16vw, 9vh) * 0.1);
-    margin-top: calc(min(16vw, 9vh) * 0.3);
+    max-width: 6.225rem;
+    margin-left: 0.1rem;
+    margin-top: 0.3rem;
   `,
   tr: css`
-    height: calc(min(16vw, 9vh) * 0.64);
-    font-size: calc(min(16vw, 9vh) * 0.375);
+    height: 0.64rem;
+    font-size: 0.375rem;
     &.subtotal {
-      height: calc(min(16vw, 9vh) * 0.45);
+      height: 0.45rem;
     }
     &.writable_now {
       animation: 1.5s ease-in emphasize-writable infinite alternate;
@@ -253,26 +253,26 @@ const CSS = {
   `,
   th: css`
     text-align: right;
-    padding: 0px calc(min(16vw, 9vh) * 0.1);
-    width: calc(min(16vw, 9vh) * 2);
+    padding: 0 0.1rem;
+    width: 2rem;
     white-space: nowrap;
     font-weight: 600;
     &.non_writable {
       font-weight: 300;
     }
     &.foak {
-      letter-spacing: calc(min(16vw, 9vh) * -0.01);
-      word-spacing: calc(min(16vw, 9vh) * -0.02);
+      letter-spacing: -0.01rem;
+      word-spacing: -0.02rem;
       font-size: 95%;
     }
     &.fh {
-      word-spacing: calc(min(16vw, 9vh) * -0.04);
+      word-spacing: -0.04rem;
       font-size: 95%;
     }
   `,
   td: css`
     border: 1px solid #000;
-    width: calc(min(16vw, 9vh) * 0.65);
+    width: 0.65rem;
     text-align: center;
     font-weight: 200;
     box-sizing: border-box;
@@ -315,12 +315,12 @@ const CSS = {
     }
   `,
   td_score: css`
-    max-width: calc(min(16vw, 9vh) * 0.65);
+    max-width: 0.65rem;
   `,
   td_turns: css`
     font-weight: 200;
     white-space: nowrap;
-    padding: 0px calc(min(16vw, 9vh) * 0.1);
+    padding: 0px 0.1rem;
   `,
 
   border: css`

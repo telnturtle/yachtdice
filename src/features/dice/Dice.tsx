@@ -42,45 +42,45 @@ const diceWrapCss = css`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: calc(0.8 * min(16vw, 9vh));
-  width: calc(0.8 * min(16vw, 9vh));
+  height: 0.8rem;
+  width: 0.8rem;
   transition: transform 0.25s ease-in-out, top 0.2s ease-in-out, right 0.2s ease-in-out, margin-top 0.2s ease-in-out;
   position: absolute;
-  right: calc(0.4 * min(16vw, 9vh));
+  right: 0.4rem;
   &.order_0 {
-    top: calc((1 * 1.125 + 0.5) * min(16vw, 9vh));
+    top: calc((1 * 1.125 + 0.5) * 1rem);
   }
   &.order_1 {
-    top: calc((2 * 1.125 + 0.5) * min(16vw, 9vh));
+    top: calc((2 * 1.125 + 0.5) * 1rem);
   }
   &.order_2 {
-    top: calc((3 * 1.125 + 0.5) * min(16vw, 9vh));
+    top: calc((3 * 1.125 + 0.5) * 1rem);
   }
   &.order_3 {
-    top: calc((4 * 1.125 + 0.5) * min(16vw, 9vh));
+    top: calc((4 * 1.125 + 0.5) * 1rem);
   }
   &.order_4 {
-    top: calc((5 * 1.125 + 0.5) * min(16vw, 9vh));
+    top: calc((5 * 1.125 + 0.5) * 1rem);
   }
   &.keep_0 {
-    right: calc(1.575 * min(16vw, 9vh));
-    top: calc((1 * 1.125 + 0.5) * min(16vw, 9vh));
+    right: 1.575rem;
+    top: calc((1 * 1.125 + 0.5) * 1rem);
   }
   &.keep_1 {
-    right: calc(1.575 * min(16vw, 9vh));
-    top: calc((2 * 1.125 + 0.5) * min(16vw, 9vh));
+    right: 1.575rem;
+    top: calc((2 * 1.125 + 0.5) * 1rem);
   }
   &.keep_2 {
-    right: calc(1.575 * min(16vw, 9vh));
-    top: calc((3 * 1.125 + 0.5) * min(16vw, 9vh));
+    right: 1.575rem;
+    top: calc((3 * 1.125 + 0.5) * 1rem);
   }
   &.keep_3 {
-    right: calc(1.575 * min(16vw, 9vh));
-    top: calc((4 * 1.125 + 0.5) * min(16vw, 9vh));
+    right: 1.575rem;
+    top: calc((4 * 1.125 + 0.5) * 1rem);
   }
   &.keep_4 {
-    right: calc(1.575 * min(16vw, 9vh));
-    top: calc((5 * 1.125 + 0.5) * min(16vw, 9vh));
+    right: 1.575rem;
+    top: calc((5 * 1.125 + 0.5) * 1rem);
   }
 `
 
@@ -107,22 +107,22 @@ const diceCss = css`
     justify-self: center;
   }
   & [data-die='1'] {
-    transform: rotate3d(0, 0, 0, 90deg) translateZ(calc(0.4 * min(16vw, 9vh)));
+    transform: rotate3d(0, 0, 0, 90deg) translateZ(0.4rem);
   }
   & [data-die='2'] {
-    transform: rotate3d(-1, 0, 0, 90deg) translateZ(calc(0.4 * min(16vw, 9vh)));
+    transform: rotate3d(-1, 0, 0, 90deg) translateZ(0.4rem);
   }
   & [data-die='3'] {
-    transform: rotate3d(0, 1, 0, 90deg) translateZ(calc(0.4 * min(16vw, 9vh)));
+    transform: rotate3d(0, 1, 0, 90deg) translateZ(0.4rem);
   }
   & [data-die='4'] {
-    transform: rotate3d(0, -1, 0, 90deg) translateZ(calc(0.4 * min(16vw, 9vh)));
+    transform: rotate3d(0, -1, 0, 90deg) translateZ(0.4rem);
   }
   & [data-die='5'] {
-    transform: rotate3d(1, 0, 0, 90deg) translateZ(calc(0.4 * min(16vw, 9vh)));
+    transform: rotate3d(1, 0, 0, 90deg) translateZ(0.4rem);
   }
   & [data-die='6'] {
-    transform: rotate3d(1, 0, 0, 180deg) translateZ(calc(0.4 * min(16vw, 9vh)));
+    transform: rotate3d(1, 0, 0, 180deg) translateZ(0.4rem);
   }
   & [data-die='1'] .dot:nth-of-type(1) {
     grid-area: five;
