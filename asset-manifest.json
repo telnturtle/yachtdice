@@ -1,12 +1,12 @@
 {
   "files": {
     "main.css": "/yachtdice/static/css/main.8ec91aee.css",
-    "main.js": "/yachtdice/static/js/main.cd7afcad.js",
+    "main.js": "/yachtdice/static/js/main.812e02f2.js",
     "static/js/27.95381d15.chunk.js": "/yachtdice/static/js/27.95381d15.chunk.js",
     "index.html": "/yachtdice/index.html"
   },
   "entrypoints": [
     "static/css/main.8ec91aee.css",
-    "static/js/main.cd7afcad.js"
+    "static/js/main.812e02f2.js"
   ]
 }
