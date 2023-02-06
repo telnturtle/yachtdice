@@ -45,6 +45,13 @@ export function ScoreBoard(): ReactElement {
 
   const scoreTrProps = { onClick, player, players, pIndex, diceShaking, computed, leftRolls }
 
+  const turnsTd = (
+    <td css={[CSS.td, CSS.td_turns]} className="td_player_name td_nowplayer">{`Turns: ${Math.min(
+      12,
+      12 - leftTurns + 1
+    )}/12`}</td>
+  )
+
   return (
     <div css={CSS.root}>
       <table css={CSS.table_abs}>
@@ -53,20 +60,20 @@ export function ScoreBoard(): ReactElement {
             <td css={[CSS.td, CSS.th]} className={cx('td_player_name', { td_nowplayer: pIndex === 0 })}>
               {players[0].name}
             </td>
-            <td css={[CSS.td, CSS.td_turns]}>Turns</td>
+            {pIndex === 0 ? turnsTd : null}
           </tr>
           <tr css={CSS.tr}>
             <td css={[CSS.td, CSS.th]} className={cx('td_player_name', { td_nowplayer: pIndex === 1 })}>
               {players[1].name}
             </td>
-            <td css={[CSS.td, CSS.td_turns]}>{`${Math.min(12, 12 - leftTurns + 1)}/12`}</td>
+            {pIndex === 1 ? turnsTd : null}
           </tr>
         </tbody>
       </table>
       <table css={CSS.table}>
         <tbody>
-          <ScoreTr {...scoreTrProps} name="Aces" cat="aces" />
-          <ScoreTr {...scoreTrProps} name="Deuces" cat="deuces" />
+          <ScoreTr {...scoreTrProps} name="Ones" cat="aces" />
+          <ScoreTr {...scoreTrProps} name="Twos" cat="deuces" />
           <ScoreTr {...scoreTrProps} name="Threes" cat="threes" />
           <ScoreTr {...scoreTrProps} name="Fours" cat="fours" />
           <ScoreTr {...scoreTrProps} name="Fives" cat="fives" />
@@ -90,20 +97,28 @@ export function ScoreBoard(): ReactElement {
             </th>
             {players.map((p) => {
               return (
-                <td css={CSS.td} className={cx({})}>
+                <td css={CSS.td} className={cx({ td_writed: !!p.bonus })}>
                   {p.bonus}
                 </td>
               )
             })}
           </tr>
           <ScoreTr {...scoreTrProps} name="Choice" cat="choice" />
-          <ScoreTr {...scoreTrProps} name="Four of a Kind" cat="fourOfAKind" foak />
-          <ScoreTr {...scoreTrProps} name="Full House" cat="fullHouse" />
-          <ScoreTr {...scoreTrProps} name="S. Straight" cat="smallStraight" />
-          <ScoreTr {...scoreTrProps} name="L. Straight" cat="largeStraight" />
+          <ScoreTr
+            {...scoreTrProps}
+            name={
+              <>
+                4<span css={CSS.smallCategory}>{' of a '}</span>Kind
+              </>
+            }
+            cat="fourOfAKind"
+          />
+          <ScoreTr {...scoreTrProps} name="Full House" cat="fullHouse" fh />
+          <ScoreTr {...scoreTrProps} name="S. Straight" cat="smallStraight" foak />
+          <ScoreTr {...scoreTrProps} name="L. Straight" cat="largeStraight" foak />
           <ScoreTr {...scoreTrProps} name="Yacht" cat="yacht" />
           <tr css={CSS.tr} className="total">
-            <th scope="row" css={[CSS.td, CSS.th]} className="non_writable total">
+            <th scope="row" css={[CSS.td, CSS.th]} className="non_writable">
               Total
             </th>
             {players.map((p) => {
@@ -122,11 +137,12 @@ interface ScoreTrProps {
   players: PlayerMeta[]
   pIndex: number
   diceShaking: boolean
-  name: string
+  name: string | ReactElement
   computed: Record<TCategories, number> | undefined
   cat: TCategoriesWritable
   leftRolls: number
   foak?: boolean
+  fh?: boolean
 }
 
 function ScoreTr({
@@ -140,6 +156,7 @@ function ScoreTr({
   cat,
   leftRolls,
   foak,
+  fh,
 }: ScoreTrProps): ReactElement {
   return (
     <tr
@@ -151,7 +168,8 @@ function ScoreTr({
         scope="row"
         css={[CSS.td, CSS.th]}
         className={cx({
-          foak: foak,
+          foak,
+          fh,
         })}
       >
         {name}
@@ -195,22 +213,20 @@ const CSS = {
   table_abs: css`
     border-collapse: collapse;
     position: absolute;
-    top: calc(min(16vw, 9vh) * 0.25);
+    top: calc(min(16vw, 9vh) * 0.2);
+    left: calc(min(16vw, 9vh) * 0.1);
   `,
   table: css`
     border-collapse: collapse;
     max-width: calc(min(16vw, 9vh) * 6.225);
+    margin-left: calc(min(16vw, 9vh) * 0.1);
+    margin-top: calc(min(16vw, 9vh) * 0.3);
   `,
   tr: css`
-    height: calc(min(16vw, 9vh) * 0.625);
+    height: calc(min(16vw, 9vh) * 0.64);
     font-size: calc(min(16vw, 9vh) * 0.375);
     &.subtotal {
       height: calc(min(16vw, 9vh) * 0.45);
-      /* background-color: rgba(0, 102, 231, 10%); */
-    }
-    &.total {
-      height: calc(min(16vw, 9vh) * 0.65);
-      /* background-color: rgba(0, 102, 231, 23%); */
     }
     &.writable_now {
       animation: 1.5s ease-in emphasize-writable infinite alternate;
@@ -228,18 +244,17 @@ const CSS = {
     }
     @keyframes emphasize-writable-td_auto {
       from {
-        color: rgba(0, 0, 0, 0.6);
+        color: rgba(64, 64, 64, 0.6);
       }
       to {
-        color: rgba(0, 0, 0, 0.1);
+        color: rgba(64, 64, 64, 0.3);
       }
     }
   `,
   th: css`
     text-align: right;
     padding: 0px calc(min(16vw, 9vh) * 0.1);
-    width: calc(min(16vw, 9vh) * 2.25);
-    width: calc(min(16vw, 9vh) * 2.125);
+    width: calc(min(16vw, 9vh) * 2);
     white-space: nowrap;
     font-weight: 600;
     &.non_writable {
@@ -248,7 +263,11 @@ const CSS = {
     &.foak {
       letter-spacing: calc(min(16vw, 9vh) * -0.01);
       word-spacing: calc(min(16vw, 9vh) * -0.02);
-      font-size: calc(min(16vw, 9vh) * 0.32);
+      font-size: 95%;
+    }
+    &.fh {
+      word-spacing: calc(min(16vw, 9vh) * -0.04);
+      font-size: 95%;
     }
   `,
   td: css`
@@ -268,9 +287,6 @@ const CSS = {
     &.td_notext {
       visibility: hidden;
     }
-    &.total {
-      /* background-color: rgba(0, 102, 231, 25%); */
-    }
     &.td_writed.td_writed {
       font-weight: 700;
     }
@@ -279,7 +295,9 @@ const CSS = {
     }
     &.td_nowplayer.td_player_name {
       font-weight: 800;
-      background: rgba(212, 7, 15, 0.15);
+      /* background: rgba(212, 7, 15, 0.15); */
+      background: none;
+      color: hsla(358, 94%, 30%, 0.85);
     }
     & .score {
       display: inline-block;
@@ -320,9 +338,12 @@ const CSS = {
     flex-flow: row wrap;
   `,
   subtotal_1: css`
-    font-size: 90%;
+    font-size: 85%;
   `,
   subtotal_2: css`
     font-size: 60%;
+  `,
+  smallCategory: css`
+    font-size: 70%;
   `,
 }

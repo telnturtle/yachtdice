@@ -44,43 +44,43 @@ const diceWrapCss = css`
   align-items: center;
   height: calc(0.8 * min(16vw, 9vh));
   width: calc(0.8 * min(16vw, 9vh));
-  transition: transform 0.25s ease-in-out, top 0.25s ease-in-out, right 0.25s ease-in-out, margin-top 0.25s ease-in-out;
+  transition: transform 0.25s ease-in-out, top 0.2s ease-in-out, right 0.2s ease-in-out, margin-top 0.2s ease-in-out;
   position: absolute;
-  right: calc(0.5 * min(16vw, 9vh));
+  right: calc(0.4 * min(16vw, 9vh));
   &.order_0 {
-    top: calc(1 * 1.25 * min(16vw, 9vh));
+    top: calc((1 * 1.125 + 0.5) * min(16vw, 9vh));
   }
   &.order_1 {
-    top: calc(2 * 1.25 * min(16vw, 9vh));
+    top: calc((2 * 1.125 + 0.5) * min(16vw, 9vh));
   }
   &.order_2 {
-    top: calc(3 * 1.25 * min(16vw, 9vh));
+    top: calc((3 * 1.125 + 0.5) * min(16vw, 9vh));
   }
   &.order_3 {
-    top: calc(4 * 1.25 * min(16vw, 9vh));
+    top: calc((4 * 1.125 + 0.5) * min(16vw, 9vh));
   }
   &.order_4 {
-    top: calc(5 * 1.25 * min(16vw, 9vh));
+    top: calc((5 * 1.125 + 0.5) * min(16vw, 9vh));
   }
   &.keep_0 {
-    right: calc(1.75 * min(16vw, 9vh));
-    top: calc(1 * 1.25 * min(16vw, 9vh));
+    right: calc(1.575 * min(16vw, 9vh));
+    top: calc((1 * 1.125 + 0.5) * min(16vw, 9vh));
   }
   &.keep_1 {
-    right: calc(1.75 * min(16vw, 9vh));
-    top: calc(2 * 1.25 * min(16vw, 9vh));
+    right: calc(1.575 * min(16vw, 9vh));
+    top: calc((2 * 1.125 + 0.5) * min(16vw, 9vh));
   }
   &.keep_2 {
-    right: calc(1.75 * min(16vw, 9vh));
-    top: calc(3 * 1.25 * min(16vw, 9vh));
+    right: calc(1.575 * min(16vw, 9vh));
+    top: calc((3 * 1.125 + 0.5) * min(16vw, 9vh));
   }
   &.keep_3 {
-    right: calc(1.75 * min(16vw, 9vh));
-    top: calc(4 * 1.25 * min(16vw, 9vh));
+    right: calc(1.575 * min(16vw, 9vh));
+    top: calc((4 * 1.125 + 0.5) * min(16vw, 9vh));
   }
   &.keep_4 {
-    right: calc(1.75 * min(16vw, 9vh));
-    top: calc(5 * 1.25 * min(16vw, 9vh));
+    right: calc(1.575 * min(16vw, 9vh));
+    top: calc((5 * 1.125 + 0.5) * min(16vw, 9vh));
   }
 `
 
@@ -98,13 +98,12 @@ const diceCss = css`
   margin-block-end: 0;
   & .dot {
     align-self: center;
-    background-color: #666;
+    background-color: #555;
     border-radius: 50%;
-    box-shadow: inset -0.15rem 0.15rem 0.25rem rgba(0, 0, 0, 0.5);
+    box-shadow: inset -0.03rem 0.03rem 0.05rem rgba(0, 0, 0, 0.5);
     display: block;
-    height: calc(90%);
-    width: calc(90%);
-    width: calc(90%);
+    width: 150%;
+    height: 150%;
     justify-self: center;
   }
   & [data-die='1'] {
@@ -191,7 +190,7 @@ const diceCss = css`
 `
 
 const dieCss = css`
-  box-shadow: inset -0.35rem 0.35rem 0.75rem rgba(0, 0, 0, 0.3), inset 0.5rem -0.25rem 0.5rem rgba(0, 0, 0, 0.15);
+  box-shadow: inset -0.07rem 0.07rem 0.15rem rgba(0, 0, 0, 0.2), inset 0.1rem -0.05rem 0.1rem rgba(0, 0, 0, 0.2);
   border-radius: 10%;
   display: grid;
   grid-column: 1;
@@ -200,17 +199,13 @@ const dieCss = css`
     'one two three'
     'four five six'
     'seven eight nine';
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: 20% 20% 20%;
+  grid-template-rows: 20% 20% 20%;
+  justify-content: space-between;
+  align-content: space-between;
   padding: calc(100% / 6);
   height: 100%;
   width: 100%;
-  background: linear-gradient(
-    90deg,
-    rgba(191, 191, 191, 0.6752688172043011) 0%,
-    rgba(9, 9, 121, 0.4473118279569892) 35%,
-    rgba(149, 237, 255, 1) 100%
-  );
   background: rgb(209, 209, 209);
   box-sizing: border-box;
 `
