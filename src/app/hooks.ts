@@ -1,3 +1,5 @@
+/* https://github.com/reduxjs/cra-template-redux 로 생성된 템플릿 */
+
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import type { RootState, AppDispatch } from './store'
 

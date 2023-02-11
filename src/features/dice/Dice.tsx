@@ -14,7 +14,7 @@ interface DiceProps {
 }
 
 /**
- * ⚀ ⚁ ⚂ ⚃ ⚄ ⚅
+ * 주사위 1개를 나타낸다. 게임에서 사용하기 위해 래핑된 D6이다.
  */
 export function Dice({ id }: DiceProps): ReactElement {
   const dice = useAppSelector(selectDiceById[id])
@@ -22,7 +22,13 @@ export function Dice({ id }: DiceProps): ReactElement {
   const dispatch = useAppDispatch()
   const diceShaking = useAppSelector(selectDiceShaking)
 
-  /* do not memoize this (low efficiency) */
+  /**
+   * do not memoize this (low efficiency)
+   *
+   * 게임 중 주사위를 터치했을 때 keep을 토글한다.
+   *
+   * redux dispatch를 상위 컴포넌트 보다 여기에서 할 수 있어서 하위로 내렸다.
+   * */
   const onClick = () => {
     if (!diceShaking && leftRolls !== 3) dispatch(toggleKeep(id))
   }
@@ -210,6 +216,7 @@ const dieCss = css`
   box-sizing: border-box;
 `
 
+/** ⚀ ⚁ ⚂ ⚃ ⚄ ⚅ 3D로 이루어진 주사위 1개를 나타낸다. */
 export function D6({ matrix, tilt }: { matrix: TMatrix; tilt?: boolean }): ReactElement {
   return (
     <ol css={diceCss} style={{ transform: makeMatrix3dTextFromMatrix(tilt ? tiltMatrix(matrix) : matrix) }}>

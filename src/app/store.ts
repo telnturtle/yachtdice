@@ -1,3 +1,5 @@
+/* https://github.com/reduxjs/cra-template-redux 로 생성된 템플릿 */
+
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit'
 import { diceReducer } from '../features/dice/diceSlice'
 import { messageReducer } from '../features/message/messageSlice'

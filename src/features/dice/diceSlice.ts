@@ -11,16 +11,24 @@ import {
   rotatorMatrices,
 } from './util'
 
+/** 게임에 필요한 주사위 메타정보 */
 export interface DiceMeta {
   id: ZFour
+  /** 회전변환행렬 */
   matrix: TMatrix
+  /** 주사위 윗면 숫자 */
   topside: number
+  /** 게임상 주사위가 정렬된 순서 */
   order: ZFour
+  /** 주사위 킵 여부 */
   keep: boolean
+  /** 킵된 주사위 정렬된 순서 */
   keepOrder: ZFour
+  /** 주사위 기울임 여부 */
   tilt: boolean
 }
 
+/** 5개의 주사위를 나타내며 각 주사위의 id와 index가 게임이 진행되는 동안 계속 일치한다. */
 export interface DiceState {
   dices: [DiceMeta, DiceMeta, DiceMeta, DiceMeta, DiceMeta]
 }
@@ -78,8 +86,10 @@ export const diceSlice = createSlice({
         state.dices[d.id].order = array.pop() ?? 0
       })
     },
-    /** 킵 여부 토글
-     * 변경되는 순서에서 가장 상위 위치를 선택 */
+    /**
+     * 킵 여부를 토글하며
+     * 변경될 주사위들의 기존 순서에서 가장 상위의 비어있는 위치를 선택
+     */
     toggleKeep: (state, action: PayloadAction<ZFour>) => {
       const orders = {
         kept: new Set(),
@@ -97,7 +107,7 @@ export const diceSlice = createSlice({
         state.dices[id].order = Math.min(...[0, 1, 2, 3, 4].filter((__) => !orders.unkept.has(__))) as ZFour
       }
     },
-    /** 킵되지 않은 주사위들을 회전시켜 모양을 정렬 */
+    /** 킵되지 않은 주사위들을 회전시켜 눈의 모양을 정렬 */
     alignUnkeeps: (state) => {
       const unkeeps = state.dices.filter((d) => !d.keep).map((d) => d.id)
       unkeeps.forEach((id) => {
@@ -105,7 +115,11 @@ export const diceSlice = createSlice({
         theDice.matrix = changeToRepresentativeMatrix(theDice.matrix)
       })
     },
-    /** 주사위 여러개를 한번에 회전 */
+    /**
+     * 주사위 여러개를 한번에 회전
+     *
+     * 주사위 ID를 방향으로 회전
+     */
     rotateBatch: (state, action: PayloadAction<[ZFour, BasicRotationDirection][]>) => {
       action.payload.forEach(([id, dir]) => {
         state.dices[id].matrix = multiplyMatrix(state.dices[id].matrix, rotatorMatrices[dir])
@@ -115,22 +129,34 @@ export const diceSlice = createSlice({
     toggleTilt: (state, action: PayloadAction<ZFour>) => {
       state.dices[action.payload].tilt = !state.dices[action.payload].tilt
     },
-    /** 킵되지 않은 주사위의 순서번째를 기울임 */
+    /**
+     * 킵되지 않은 주사위의 [순서]번째를 기울임
+     *
+     * 페이로드: 순서
+     */
     tiltByOrder: (state, action: PayloadAction<ZFour>) => {
       const d = state.dices.find((dice) => dice.order === action.payload && !dice.keep)
       if (d) d.tilt = d.keep ? false : true
     },
-    /** 킵되지 않은 주사위의 순서번째를 기울임해제 */
+    /**
+     * 킵되지 않은 주사위의 [순서]번째를 기울임해제
+     *
+     * 페이로드: 순서
+     */
     untiltByOrder: (state, action: PayloadAction<ZFour>) => {
       const d = state.dices.find((dice) => dice.order === action.payload && !dice.keep)
       if (d) d.tilt = d.keep ? false : false
     },
-    /** 킵되지 않은 주사위의 순서번째를 기울임 토글 */
+    /**
+     * 킵되지 않은 주사위의 [순서]번째를 기울임 토글
+     *
+     * 페이로드: 순서
+     */
     toggleTiltByOrder: (state, action: PayloadAction<ZFour>) => {
       const d = state.dices.find((dice) => dice.order === action.payload && !dice.keep)
       if (d) d.tilt = d.keep ? false : !d.tilt
     },
-    /** 주사위 초기화 */
+    /** 주사위들을 초기화 */
     initDices: (state) => {
       state.dices[0] = { ...initialState.dices[0], matrix: getRandomInitialTopside() }
       state.dices[1] = { ...initialState.dices[1], matrix: getRandomInitialTopside() }
@@ -160,16 +186,25 @@ export const {
   initDices,
 } = diceSlice.actions
 
+/** 모든 주사위들을 선택 */
 export const selectDices = (state: RootState) => state.dice.dices
+/** 킵되지 않은 모든 주사위들을 선택 */
 export const selectDicesUnkept = (state: RootState) => state.dice.dices.filter(({ keep }) => !keep)
+/** 킵되지 않은 모든 주사위 ID들을 선택 */
 export const selectDiceIdsUnkept = (state: RootState) =>
   new Set(state.dice.dices.filter(({ keep }) => !keep).map(({ id }) => id))
+/** 주사위 ID 0 선택 */
 export const selectDice0 = (state: RootState) => state.dice.dices[0]
+/** 주사위 ID 1 선택 */
 export const selectDice1 = (state: RootState) => state.dice.dices[1]
+/** 주사위 ID 2 선택 */
 export const selectDice2 = (state: RootState) => state.dice.dices[2]
+/** 주사위 ID 3 선택 */
 export const selectDice3 = (state: RootState) => state.dice.dices[3]
+/** 주사위 ID 4 선택 */
 export const selectDice4 = (state: RootState) => state.dice.dices[4]
 
+/** 주사위 ID에 대한 셀렉터 */
 export const selectDiceById: Record<ZFour, (state: RootState) => DiceMeta> = {
   0: selectDice0,
   1: selectDice1,
@@ -177,14 +212,22 @@ export const selectDiceById: Record<ZFour, (state: RootState) => DiceMeta> = {
   3: selectDice3,
   4: selectDice4,
 }
+/** 킵된 모든 주사위들을 선택 */
 export const selectDiceKeeps = (state: RootState) => state.dice.dices.map(({ keep }) => keep)
-export const selectUnkeptDiceIdsOrdersTable = (state: RootState) =>
+/**
+ * 킵되지 않은 모든 주사위들의 위치에 대한 ID 테이블을 선택
+ *
+ * TODO: 최적화 필요, 셀렉터 대신 util 함수로 필요할 때만 생성하도록 만들 수 있다.
+ */
+export const selectUnkeptDiceOrdersIdsTable = (state: RootState) =>
   new Map<ZFour, ZFour>(state.dice.dices.filter(({ keep }) => !keep).map(({ id, order }) => [order, id]))
+/** 킵되지 않은 모든 주사위들이 위치로 오름차순 정렬하고 선택 */
 export const selectUnkeepDicesByOrder = (state: RootState) => {
   const array = state.dice.dices.filter(({ keep }) => !keep)
   array.sort((a, b) => a.order - b.order)
   return array
 }
+/** 모든 주사위의 topside들을 선택 */
 export const selectDiceTopsides = (state: RootState) => state.dice.dices.map(({ topside }) => topside)
 
 export const diceReducer = diceSlice.reducer

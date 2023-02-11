@@ -11,7 +11,7 @@ import {
   rotateBatch,
   selectDiceIdsUnkept,
   selectDiceKeeps,
-  selectUnkeptDiceIdsOrdersTable,
+  selectUnkeptDiceOrdersIdsTable,
   sortUnkeeps,
   tiltByOrder,
   untiltByOrder,
@@ -34,7 +34,7 @@ export function RollButton(): ReactElement {
   const timerRef = useRef<number | null>(null)
   const leftRolls = useAppSelector(selectLeftRolls)
   const rollFreezed = useAppSelector(selectRollFreezed)
-  const unkeptDiceIdsOrdersTable = useAppSelector(selectUnkeptDiceIdsOrdersTable)
+  const unkeptDiceOrdersIdsTable = useAppSelector(selectUnkeptDiceOrdersIdsTable)
   const diceIdsUnkept = useAppSelector(selectDiceIdsUnkept)
   const leftTurns = useAppSelector(selectLeftTurns)
   const [tiltSignal, signalTilt] = useReducer(
@@ -89,7 +89,7 @@ export function RollButton(): ReactElement {
         }
       }
     }
-    const table = unkeptDiceIdsOrdersTable
+    const table = unkeptDiceOrdersIdsTable
     timerRef.current = window.setInterval(() => {
       if (count.tilt) {
         signalTilt({ tilt: true, tick: leftRolls === 3 ? TICKS.slow : TICKS.normal })

@@ -33,7 +33,7 @@ const textCss = css`
   color: rgba(0, 0, 0, 0.2);
   user-select: none;
 `
-
+/** 주사위를 킵하는 화면상 장소 */
 export function DiceKeep(): ReactElement {
   return (
     <div css={rootCss}>

@@ -7,8 +7,7 @@ import { RollButton } from './RollButton'
 import { useAppSelector } from '../../app/hooks'
 import { selectLeftRolls } from '../score/scoreSlice'
 
-/** The initial dice info list value for a `useState` */
-
+/** 게임에서 쓰이는 주사위 5개, roll 버튼, 남은 roll 횟수를 나타낸다. */
 export function Dices(): ReactElement {
   return (
     <div css={CSS.root}>
@@ -25,6 +24,7 @@ export function Dices(): ReactElement {
   )
 }
 
+/** 남은 roll 횟수 */
 function RollLeft() {
   const leftRolls = useAppSelector(selectLeftRolls)
   return (

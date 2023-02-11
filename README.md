@@ -2,8 +2,21 @@
 
 얏다이스(yacht dice, 요트 다이스)를 게임으로 구현해보자.
 
-폰화면으로 세로로 플레이하는것을 전제함.
+폰화면으로 세로로 플레이하는것을 전제한다.
 
+## 기술 스택
+- Emotion
+- Redux-Toolkit, RTK
+- CSS 3D 애니메이션
+- CSS grid
+- CSS 그래디언트
+- TypeScript
+- GitHub Pages
+- Create React App, CRA
+
+`src/app/hooks.ts`와 `src/app/store.ts`와 `src/features/foo/fooSlice.ts`는 CRA TRK 템플릿에서 생성되었다.
+
+Prettier로 코드를 formatting 하였다.
 
 ## 새로 배운것
 - CSS linear-gradient
@@ -11,6 +24,8 @@
 - CSS 3D 애니메이션
 - CSS `matrix3d()`
 - CSS 그림자
+- Redux-toolkit
+- Redux-toolkit Create-React-App 템플릿
 ## Powered by
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
