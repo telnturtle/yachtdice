@@ -33,23 +33,18 @@ export function computeTopsides(numbers: number[]): Record<TCategories, number> 
   return res
 }
 export function computeUnwritableCategories(pm: PlayerMeta) {
-  const { aces, deuces, threes, fours, fives, sixes } = pm
-  const subtotal = ([aces, deuces, threes, fours, fives, sixes].filter(isNumber) as number[]).reduce(add, 0)
+  const subtotal = st(pm)
   const bonus = subtotal >= 63 ? 35 : 0
-  const { choice, fourOfAKind, fullHouse, smallStraight, largeStraight, yacht } = pm
-  const total = (
-    [choice, fourOfAKind, fullHouse, smallStraight, largeStraight, yacht].filter(isNumber) as number[]
-  ).reduce(add, subtotal)
+  const total = bonus + tt(pm)
   return { subtotal, bonus, total }
 }
-// function st(sides: Record<number, number>): number {
-//   return arrayOfOneToSix.map((i) => i * sides[i]).reduce(add);
-// }
-// function bonus(sides: Record<number, number>): number {
-//   return arrayOfOneToSix.map((i) => i * sides[i]).reduce(add) >= 63 ? 35 : 0;
-// }
 export function add(a: number, b: number): number {
   return a + b
+}
+export function arraySumNumber(array: (number | undefined)[]): number {
+  const numbers = array.filter(isNumber) as number[]
+  const sum = numbers.reduce(add, 0)
+  return sum
 }
 function foak(sides: Record<number, number>): number {
   for (const i of arrayOfOneToSix) {
@@ -90,7 +85,17 @@ function y(sides: Record<number, number>): number {
 export function isNumber(value: any): boolean {
   return value === Number(value)
 }
-export function total(playerMeta: PlayerMeta): number {
+export function st(playerMeta: PlayerMeta): number {
+  return (
+    (playerMeta.aces ?? 0) +
+    (playerMeta.deuces ?? 0) +
+    (playerMeta.threes ?? 0) +
+    (playerMeta.fours ?? 0) +
+    (playerMeta.fives ?? 0) +
+    (playerMeta.sixes ?? 0)
+  )
+}
+export function tt(playerMeta: PlayerMeta): number {
   return (
     (playerMeta.aces ?? 0) +
     (playerMeta.deuces ?? 0) +
