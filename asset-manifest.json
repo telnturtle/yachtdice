@@ -1,12 +1,12 @@
 {
   "files": {
-    "main.css": "/yachtdice/static/css/main.8ec91aee.css",
-    "main.js": "/yachtdice/static/js/main.53cb137b.js",
+    "main.css": "/yachtdice/static/css/main.6f0b1a61.css",
+    "main.js": "/yachtdice/static/js/main.cbfa2a42.js",
     "static/js/27.95381d15.chunk.js": "/yachtdice/static/js/27.95381d15.chunk.js",
     "index.html": "/yachtdice/index.html"
   },
   "entrypoints": [
-    "static/css/main.8ec91aee.css",
-    "static/js/main.53cb137b.js"
+    "static/css/main.6f0b1a61.css",
+    "static/js/main.cbfa2a42.js"
   ]
 }
