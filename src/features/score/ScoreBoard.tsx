@@ -46,7 +46,7 @@ export function ScoreBoard(): ReactElement {
   const scoreTrProps = { onClick, player, players, pIndex, diceShaking, computed, leftRolls }
 
   const turnsTd = (
-    <td css={[CSS.td, CSS.td_turns]} className="td_player_name td_nowplayer">{`Turns: ${Math.min(
+    <td css={[CSS.td, CSS.td_turns]} className="td_player_name td_nowplayer" {...{ [`data-player-${pIndex + 1}`] : true}}>{`Turns: ${Math.min(
       12,
       12 - leftTurns + 1
     )}/12`}</td>
@@ -57,13 +57,13 @@ export function ScoreBoard(): ReactElement {
       <table css={CSS.table_abs}>
         <tbody>
           <tr css={CSS.tr}>
-            <td css={[CSS.td, CSS.th]} className={cx('td_player_name', { td_nowplayer: pIndex === 0 })}>
+            <td css={[CSS.td, CSS.th]} className={cx('td_player_name', { td_nowplayer: pIndex === 0 })} data-player-1>
               {players[0].name}
             </td>
             {pIndex === 0 ? turnsTd : null}
           </tr>
           <tr css={CSS.tr}>
-            <td css={[CSS.td, CSS.th]} className={cx('td_player_name', { td_nowplayer: pIndex === 1 })}>
+            <td css={[CSS.td, CSS.th]} className={cx('td_player_name', { td_nowplayer: pIndex === 1 })} data-player-2>
               {players[1].name}
             </td>
             {pIndex === 1 ? turnsTd : null}
@@ -163,6 +163,7 @@ function ScoreTr({
       css={CSS.tr}
       onClick={() => onClick(cat)}
       className={cx({ writable_now: player[cat] === undefined && computed?.[cat] !== undefined && !diceShaking })}
+      {...{ [`data-player-${pIndex + 1}`] : true}}
     >
       <th
         scope="row"
@@ -184,6 +185,7 @@ function ScoreTr({
               td_auto: p[cat] === undefined,
               td_writed: p[cat] !== undefined,
             })}
+            {...{ [`data-player-${p.index + 1}`] : true}}
           >
             <span className={cx({ score: p[cat] !== undefined })}>{text}</span>
           </td>
@@ -231,12 +233,23 @@ const CSS = {
     &.writable_now {
       animation: 1.5s ease-in emphasize-writable infinite alternate;
     }
+    &.writable_now[data-player-2] {
+      animation: 1.5s ease-in emphasize-writable-player-2 infinite alternate;
+    }
     @keyframes emphasize-writable {
       from {
         background-color: rgba(212, 7, 15, 15%);
       }
       to {
         background-color: rgba(212, 7, 15, 5%);
+      }
+    }
+    @keyframes emphasize-writable-player-2 {
+      from {
+        background-color: rgba(213 144 7 / 15%);
+      }
+      to {
+        background-color: rgba(213 144 7 / 5%);
       }
     }
     & .td_auto {
@@ -279,10 +292,12 @@ const CSS = {
     &.td_nowplayer {
       font-weight: 700;
       background: rgba(212, 7, 15, 0.15);
+      &[data-player-2] {
+        background: rgba(212, 178, 7, 0.15);
+      }
     }
     &.td_auto {
       font-weight: 100;
-      /* color: rgba(0, 0, 0, 0.6); */
     }
     &.td_notext {
       visibility: hidden;
@@ -295,9 +310,11 @@ const CSS = {
     }
     &.td_nowplayer.td_player_name {
       font-weight: 800;
-      /* background: rgba(212, 7, 15, 0.15); */
       background: none;
       color: hsla(358, 94%, 30%, 0.85);
+      &[data-player-2] {
+        color: hsla(48, 94%, 30%, 0.85);
+      }
     }
     & .score {
       display: inline-block;

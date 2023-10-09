@@ -156,12 +156,13 @@ export function RollButton(): ReactElement {
         css={CSS.roll}
         className={cx({
           leftZeroRolls: !leftRolls || keeps.every(Boolean),
-          bouncing: leftRolls === 3 && leftTurns > 0,
         })}
         onMouseDown={onRoll}
         disabled={rollFreezed || leftRolls === 0 || leftTurns <= 0}
       >
-        Roll the dices!
+        <div className={cx({ bouncing: leftRolls === 3 && leftTurns > 0 })}>
+          Roll the dices!
+        </div>
       </button>
     </>
   )
@@ -200,15 +201,15 @@ const CSS = {
     &:disabled {
       opacity: 20%;
     }
-    &.bouncing {
-      animation: 0.75s ease-in-out bouncing infinite alternate;
+    & .bouncing {
+      animation: 1s ease-in-out bouncing infinite alternate;
     }
     @keyframes bouncing {
       from {
         transform: scale(1);
       }
       to {
-        transform: scale(108%);
+        transform: scale(116%);
       }
     }
     &.leftzerorolls {

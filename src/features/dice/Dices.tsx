@@ -1,7 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
 import { ReactElement } from 'react'
-import { displayLeftRollsEmoji } from './util'
 import { Dice } from './Dice'
 import { RollButton } from './RollButton'
 import { useAppSelector } from '../../app/hooks'
@@ -29,8 +28,8 @@ function RollLeft() {
   const leftRolls = useAppSelector(selectLeftRolls)
   return (
     <span css={CSS.rollLeft}>
-      <span className="head">{displayLeftRollsEmoji(leftRolls).head}</span>
-      {displayLeftRollsEmoji(leftRolls).tail}
+      <span className="number">{leftRolls}</span>
+      {' rolls left'}
     </span>
   )
 }
@@ -53,10 +52,11 @@ const CSS = {
     width: 2rem;
     text-align: center;
     right: 0;
-    font-weight: 700;
+    font-weight: 300;
     color: #222;
     font-size: 0.25rem;
-    &.head {
+    & .number {
+      font-weight: 800;
       opacity: 0.8;
     }
     pointer-events: none;

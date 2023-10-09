@@ -46,16 +46,17 @@ export function Message() {
             transform: scale(1);
             opacity: 1;
           }
-          22% {
+          28% {
             transform: scale(1);
             opacity: 1;
           }
-          24% {
+          30% {
             transform: scale(0);
             opacity: 0;
           }
         }
         pointer-events: none;
+        mix-blend-mode: multiply;
       `}
     >
       {messages.map((m, i) => (
