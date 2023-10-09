@@ -11,12 +11,13 @@ import { selectDiceShaking, selectLeftRolls } from '../score/scoreSlice'
 
 interface DiceProps {
   id: ZFour
+  nocolor?: boolean
 }
 
 /**
  * ⚀ ⚁ ⚂ ⚃ ⚄ ⚅
  */
-export function Dice({ id }: DiceProps): ReactElement {
+export function Dice({ id, nocolor = false }: DiceProps): ReactElement {
   const dice = useAppSelector(selectDiceById[id])
   const leftRolls = useAppSelector(selectLeftRolls)
   const dispatch = useAppDispatch()
@@ -33,7 +34,7 @@ export function Dice({ id }: DiceProps): ReactElement {
       className={cx({ [`order_${dice.order}`]: !dice.keep, [`keep_${dice.keepOrder}`]: dice.keep })}
       onClick={onClick}
     >
-      <D6 matrix={dice.matrix} tilt={dice.tilt} />
+      <D6 id={id} matrix={dice.matrix} tilt={dice.tilt} />
     </div>
   )
 }
@@ -105,6 +106,21 @@ const diceCss = css`
     width: 150%;
     height: 150%;
     justify-self: center;
+  }
+  &[data-id='0'] .dot {
+    background-color: #756262;
+  }
+  &[data-id='1'] .dot {
+    background-color: #757462;
+  }
+  &[data-id='2'] .dot {
+    background-color: #627562;
+  }
+  &[data-id='3'] .dot {
+    background-color: #627275;
+  }
+  &[data-id='4'] .dot {
+    background-color: #646275;
   }
   & [data-die='1'] {
     transform: rotate3d(0, 0, 0, 90deg) translateZ(0.4rem);
@@ -208,37 +224,52 @@ const dieCss = css`
   width: 100%;
   background: rgb(209, 209, 209);
   box-sizing: border-box;
+  &[data-id='0'] {
+    background: rgb(206, 188, 188);
+  }
+  &[data-id='1'] {
+    background: rgb(198, 198, 182);
+  }
+  &[data-id='2'] {
+    background: rgb(196, 212, 193);
+  }
+  &[data-id='3'] {
+    background: rgb(186, 198, 204);
+  }
+  &[data-id='4'] {
+    background: rgb(195, 195, 209);
+  }
 `
 
-export function D6({ matrix, tilt }: { matrix: TMatrix; tilt?: boolean }): ReactElement {
+export function D6({ id, matrix, tilt }: { id?: ZFour, matrix: TMatrix; tilt?: boolean }): ReactElement {
   return (
-    <ol css={diceCss} style={{ transform: makeMatrix3dTextFromMatrix(tilt ? tiltMatrix(matrix) : matrix) }}>
-      <li css={dieCss} data-die="1">
+    <ol css={diceCss} {...id !== undefined ? { 'data-id': id } : null} style={{ transform: makeMatrix3dTextFromMatrix(tilt ? tiltMatrix(matrix) : matrix) }}>
+      <li css={dieCss} data-die="1" {...id !== undefined ? { 'data-id': id } : null}>
         <span className="dot" />
       </li>
-      <li css={dieCss} data-die="2">
-        <span className="dot" />
-        <span className="dot" />
-      </li>
-      <li css={dieCss} data-die="3">
-        <span className="dot" />
+      <li css={dieCss} data-die="2" {...id !== undefined ? { 'data-id': id } : null}>
         <span className="dot" />
         <span className="dot" />
       </li>
-      <li css={dieCss} data-die="4">
-        <span className="dot" />
+      <li css={dieCss} data-die="3" {...id !== undefined ? { 'data-id': id } : null}>
         <span className="dot" />
         <span className="dot" />
         <span className="dot" />
       </li>
-      <li css={dieCss} data-die="5">
-        <span className="dot" />
+      <li css={dieCss} data-die="4" {...id !== undefined ? { 'data-id': id } : null}>
         <span className="dot" />
         <span className="dot" />
         <span className="dot" />
         <span className="dot" />
       </li>
-      <li css={dieCss} data-die="6">
+      <li css={dieCss} data-die="5" {...id !== undefined ? { 'data-id': id } : null}>
+        <span className="dot" />
+        <span className="dot" />
+        <span className="dot" />
+        <span className="dot" />
+        <span className="dot" />
+      </li>
+      <li css={dieCss} data-die="6" {...id !== undefined ? { 'data-id': id } : null}>
         <span className="dot" />
         <span className="dot" />
         <span className="dot" />

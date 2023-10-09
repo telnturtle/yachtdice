@@ -25,23 +25,21 @@ const dicekeepCss = css`
   justify-content: center;
   align-items: center;
   flex-flow: column;
+
+  &::after {
+  content: 'KEEP';
+  color: rgb(63 63 63);
+  mix-blend-mode: soft-light;
+  font-weight: 800;
+  transform: rotate(90deg);
+}
 `
 
-const textCss = css`
-  font-size: 0.7rem;
-  font-weight: 900;
-  color: rgba(0, 0, 0, 0.2);
-  user-select: none;
-`
-
+/** 주사위를 킵하는 화면상 장소 */
 export function DiceKeep(): ReactElement {
   return (
     <div css={rootCss}>
       <div css={dicekeepCss}>
-        <span css={textCss}>K</span>
-        <span css={textCss}>E</span>
-        <span css={textCss}>E</span>
-        <span css={textCss}>P</span>
       </div>
     </div>
   )
